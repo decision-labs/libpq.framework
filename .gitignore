@@ -12,9 +12,9 @@ xcuserdata/
 build/
 
 # generated
-bin/
-include/
-lib/
+/bin
+/include
+/lib
 src/openssl-*
 *.tar.gz
 
