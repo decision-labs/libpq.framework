@@ -20,6 +20,10 @@ Getting Started
 
 * Open `libpq.xcodeproj` with XCode and *build* the framework.
 
+## Download precompiled Framework
+
+You can also download a precompiled `libpq.framework` from: [libpq.framework.zip](https://github.com/downloads/spacialdb/libpq.framework/libpq.framework.zip)
+
 Licenses
 ========
 
