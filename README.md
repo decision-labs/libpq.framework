@@ -31,5 +31,5 @@ PostgreSQL is released under the [PostgreSQL](http://www.opensource.org/licenses
 
 The [OpenSSL](http://www.openssl.org/) toolkit stays under a dual license, i.e. both the conditions of the OpenSSL License and the original SSLeay license apply to the toolkit. See the `LICENSE.OpenSSL` file for the actual license texts.
 
-This work itself uses Jeff Verkoeyen's [iOS-Framework](https://github.com/jverkoey/iOS-Framework) and is licensed under the MIT license. See the `LICENSE` file for the details.
+This work itself uses Felix Schulze's `build-libssl.sh` script from the [OpenSSL-for-iPhone](https://github.com/x2on/OpenSSL-for-iPhone) project and Jeff Verkoeyen's [iOS-Framework](https://github.com/jverkoey/iOS-Framework); and is licensed under the MIT license. See the `LICENSE` file for the details.
 
