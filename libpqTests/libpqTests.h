@@ -7,7 +7,11 @@
 //
 
 #import <SenTestingKit/SenTestingKit.h>
+#import "libpq-fe.h"
 
-@interface libpqTests : SenTestCase
-
+@interface libpqTests : SenTestCase {
+@private
+    const char *conninfo;
+    PGconn     *conn;
+}
 @end
