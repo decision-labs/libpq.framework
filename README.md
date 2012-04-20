@@ -13,15 +13,15 @@ This repository allows you to easily create a `libpq.framework` to use in your i
 
 * Make sure that `xcode-select` points to the correct location by running:
 
-    ```sudo /usr/bin/xcode-select -switch /Applications/Xcode.app/Contents/Developer```
+    `sudo /usr/bin/xcode-select -switch /Applications/Xcode.app/Contents/Developer`
 
 * Fork this repo from GitHub:
 
-    ```git clone git://github.com/spacialdb/libpq.framwework.git```
+    `git clone git://github.com/spacialdb/libpq.framwework.git`
 
 * Run the script to download and compile OpenSSL:
 
-    ```./build-libssl.sh```
+    `./build-libssl.sh`
 
 * Open `libpq.xcodeproj` with XCode and *build* the framework.
 
@@ -33,7 +33,7 @@ You can also download a precompiled `libpq.framework` from: [libpq.framework.zip
 
 Drop the framework and copy it to your project and you should be ready to go. See libpq's [example programs](http://www.postgresql.org/docs/current/interactive/libpq-example.html) for sample code. In general for Objective-C one would need to do something like:
 
-```objective-c
+```Objective-C
 #import <libpq-fe.h>
 
 ...
