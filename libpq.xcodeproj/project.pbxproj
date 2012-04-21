@@ -24,7 +24,6 @@
 /* Begin PBXBuildFile section */
 		4B4C4CB515040B7500840750 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B4C4CB415040B7500840750 /* Foundation.framework */; };
 		4B4C4CC315040B7500840750 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B4C4CC215040B7500840750 /* SenTestingKit.framework */; };
-		4B4C4CC515040B7500840750 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B4C4CC415040B7500840750 /* UIKit.framework */; };
 		4B4C4CC615040B7500840750 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B4C4CB415040B7500840750 /* Foundation.framework */; };
 		4B4C4CC915040B7500840750 /* libpq.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B4C4CB115040B7500840750 /* libpq.a */; };
 		4B4C4CCF15040B7500840750 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4B4C4CCD15040B7500840750 /* InfoPlist.strings */; };
@@ -173,7 +172,6 @@
 		4B4C4CB415040B7500840750 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		4B4C4CC115040B7500840750 /* libpqTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = libpqTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B4C4CC215040B7500840750 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
-		4B4C4CC415040B7500840750 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		4B4C4CCC15040B7500840750 /* libpqTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "libpqTests-Info.plist"; sourceTree = "<group>"; };
 		4B4C4CCE15040B7500840750 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		4B4C4CD015040B7500840750 /* libpqTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = libpqTests.h; sourceTree = "<group>"; };
@@ -316,7 +314,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B4C4CC315040B7500840750 /* SenTestingKit.framework in Frameworks */,
-				4B4C4CC515040B7500840750 /* UIKit.framework in Frameworks */,
 				4B4C4CC615040B7500840750 /* Foundation.framework in Frameworks */,
 				4B4C4CC915040B7500840750 /* libpq.a in Frameworks */,
 			);
@@ -351,7 +348,6 @@
 				4B4C4E0B1504295600840750 /* libssl.a */,
 				4B4C4CB415040B7500840750 /* Foundation.framework */,
 				4B4C4CC215040B7500840750 /* SenTestingKit.framework */,
-				4B4C4CC415040B7500840750 /* UIKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
