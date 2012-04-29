@@ -19,15 +19,15 @@
 #  limitations under the License.
 #
 ###########################################################################
-#  Change values here                                                     #
-#                                                                         #
-VERSION="1.0.1a"                                                           #
-SDKVERSION="5.0"                                                          #
-#                                                                         #
+#  Change values here													  #
+#																		  #
+VERSION="1.0.1b"													      #
+SDKVERSION="5.1"														  #
+#																		  #
 ###########################################################################
-#                                                                         #
-# Don't change anything under this line!                                  #
-#                                                                         #
+#																		  #
+# Don't change anything under this line!								  #
+#																		  #
 ###########################################################################
 
 
@@ -37,10 +37,10 @@ DEVELOPER=`xcode-select -print-path`
 
 set -e
 if [ ! -e openssl-${VERSION}.tar.gz ]; then
-    echo "Downloading openssl-${VERSION}.tar.gz"
-    curl -O http://www.openssl.org/source/openssl-${VERSION}.tar.gz
+  echo "Downloading openssl-${VERSION}.tar.gz"
+  curl -O http://www.openssl.org/source/openssl-${VERSION}.tar.gz
 else
-    echo "Using openssl-${VERSION}.tar.gz"
+  echo "Using openssl-${VERSION}.tar.gz"
 fi
 
 mkdir -p "${CURRENTPATH}/src"
@@ -53,28 +53,28 @@ cd "${CURRENTPATH}/src/openssl-${VERSION}"
 
 for ARCH in ${ARCHS}
 do
-    if [ "${ARCH}" == "i386" ];
-    then
-        PLATFORM="iPhoneSimulator"
-    else
-        sed -ie "s!static volatile sig_atomic_t intr_signal;!static volatile intr_signal;!" "crypto/ui/ui_openssl.c"
-        PLATFORM="iPhoneOS"
-    fi
-    
-    echo "Building openssl-${VERSION} for ${PLATFORM} ${SDKVERSION} ${ARCH}"
-    echo "Please stand by..."
+  if [ "${ARCH}" == "i386" ];
+  then
+    PLATFORM="iPhoneSimulator"
+  else
+    sed -ie "s!static volatile sig_atomic_t intr_signal;!static volatile intr_signal;!" "crypto/ui/ui_openssl.c"
+    PLATFORM="iPhoneOS"
+  fi
 
-    export CC="${DEVELOPER}/Platforms/${PLATFORM}.platform/Developer/usr/bin/gcc -arch ${ARCH}"
-    mkdir -p "${CURRENTPATH}/bin/${PLATFORM}${SDKVERSION}-${ARCH}.sdk"
-    LOG="${CURRENTPATH}/bin/${PLATFORM}${SDKVERSION}-${ARCH}.sdk/build-openssl-${VERSION}.log"
+  echo "Building openssl-${VERSION} for ${PLATFORM} ${SDKVERSION} ${ARCH}"
+  echo "Please stand by..."
 
-    ./configure BSD-generic32 --openssldir="${CURRENTPATH}/bin/${PLATFORM}${SDKVERSION}-${ARCH}.sdk" > "${LOG}" 2>&1
-    # add -isysroot to CC=
-    sed -ie "s!^CFLAG=!CFLAG=-isysroot ${DEVELOPER}/Platforms/${PLATFORM}.platform/Developer/SDKs/${PLATFORM}${SDKVERSION}.sdk !" "Makefile"
+  export CC="${DEVELOPER}/Platforms/${PLATFORM}.platform/Developer/usr/bin/gcc -arch ${ARCH}"
+  mkdir -p "${CURRENTPATH}/bin/${PLATFORM}${SDKVERSION}-${ARCH}.sdk"
+  LOG="${CURRENTPATH}/bin/${PLATFORM}${SDKVERSION}-${ARCH}.sdk/build-openssl-${VERSION}.log"
 
-    make >> "${LOG}" 2>&1
-    make install >> "${LOG}" 2>&1
-    make clean >> "${LOG}" 2>&1
+  ./Configure BSD-generic32 --openssldir="${CURRENTPATH}/bin/${PLATFORM}${SDKVERSION}-${ARCH}.sdk" > "${LOG}" 2>&1
+  # add -isysroot to CC=
+  sed -ie "s!^CFLAG=!CFLAG=-isysroot ${DEVELOPER}/Platforms/${PLATFORM}.platform/Developer/SDKs/${PLATFORM}${SDKVERSION}.sdk !" "Makefile"
+
+  make >> "${LOG}" 2>&1
+  make install >> "${LOG}" 2>&1
+  make clean >> "${LOG}" 2>&1
 done
 
 echo "Build library..."
