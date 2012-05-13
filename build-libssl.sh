@@ -19,15 +19,15 @@
 #  limitations under the License.
 #
 ###########################################################################
-#  Change values here													  #
-#																		  #
-VERSION="1.0.1b"													      #
-SDKVERSION="5.1"														  #
-#																		  #
+#  Change values here                                                     #
+#                                                                         #
+VERSION="1.0.1c"                                                          #
+SDKVERSION="5.1"                                                          #
+#                                                                         #
 ###########################################################################
-#																		  #
-# Don't change anything under this line!								  #
-#																		  #
+#                                                                         #
+# Don't change anything under this line!                                  #
+#                                                                         #
 ###########################################################################
 
 
