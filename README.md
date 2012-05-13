@@ -34,7 +34,7 @@ You can also download a precompiled `libpq.framework` from: [libpq.framework.zip
 Drop the framework and copy it to your project and you should be ready to go. See libpq's [example programs](http://www.postgresql.org/docs/current/interactive/libpq-example.html) for sample code. In general for Objective-C one would need to do something like:
 
 ```Objective-C
-#import <libpq-fe.h>
+#import <libpq/libpq-fe.h>
 
 ...
 _pgconn = (PGconn *)PQconnectdb(_connectionString);
@@ -47,9 +47,9 @@ PQfinish(_pgconn);
 
 ##Licenses
 
-PostgreSQL is released under the [PostgreSQL](http://www.opensource.org/licenses/postgresql) License, a liberal Open Source license, similar to the BSD or MIT licenses. See the [COPYRIGHT.PostgreSQL](COPYRIGHT.PostgreSQL) file.
+PostgreSQL is released under the [PostgreSQL](http://www.opensource.org/licenses/postgresql) License, a liberal Open Source license, similar to the BSD or MIT licenses. See the [COPYRIGHT.PostgreSQL](https://github.com/spacialdb/libpq.framework/blob/master/COPYRIGHT.PostgreSQL) file.
 
-The [OpenSSL](http://www.openssl.org/) toolkit stays under a dual license, i.e. both the conditions of the OpenSSL License and the original SSLeay License apply to the toolkit. See the [LICENSE.OpenSSL](LICENSE.OpenSSL) file for the actual license texts.
+The [OpenSSL](http://www.openssl.org/) toolkit stays under a dual license, i.e. both the conditions of the OpenSSL License and the original SSLeay License apply to the toolkit. See the [LICENSE.OpenSSL](https://github.com/spacialdb/libpq.framework/blob/master/LICENSE.OpenSSL) file for the actual license texts.
 
-This work itself uses Felix Schulze's `build-libssl.sh` script from the [OpenSSL-for-iPhone](https://github.com/x2on/OpenSSL-for-iPhone) project and Jeff Verkoeyen's [iOS-Framework](https://github.com/jverkoey/iOS-Framework); and is licensed under the MIT license. See the [LICENSE](LICENSE) file for the details.
+This work itself uses Felix Schulze's `build-libssl.sh` script from the [OpenSSL-for-iPhone](https://github.com/x2on/OpenSSL-for-iPhone) project and Jeff Verkoeyen's [iOS-Framework](https://github.com/jverkoey/iOS-Framework); and is licensed under the MIT license. See the [LICENSE](https://github.com/spacialdb/libpq.framework/blob/master/LICENSE) file for the details.
 
