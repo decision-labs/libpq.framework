@@ -326,7 +326,6 @@
 		4B4C4CA615040B7500840750 = {
 			isa = PBXGroup;
 			children = (
-				4BD56590154E0111009E5F60 /* libpq.framework */,
 				4BE930C315057FE60021F063 /* src */,
 				4B4C4CCA15040B7500840750 /* libpqTests */,
 				4B4C4CB315040B7500840750 /* Frameworks */,
@@ -346,6 +345,7 @@
 		4B4C4CB315040B7500840750 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4BD56590154E0111009E5F60 /* libpq.framework */,
 				4B4C4E0A1504295600840750 /* libcrypto.a */,
 				4B4C4E0B1504295600840750 /* libssl.a */,
 				4B4C4CB415040B7500840750 /* Foundation.framework */,
