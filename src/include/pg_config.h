@@ -283,7 +283,7 @@
 /* #undef HAVE_LDAP_H */
 
 /* Define to 1 if you have the `crypto' library (-lcrypto). */
-/* #undef HAVE_LIBCRYPTO */
+#define HAVE_LIBCRYPTO 1
 
 /* Define to 1 if you have the `ldap' library (-lldap). */
 /* #undef HAVE_LIBLDAP */
@@ -304,7 +304,7 @@
 /* #undef HAVE_LIBSELINUX */
 
 /* Define to 1 if you have the `ssl' library (-lssl). */
-/* #undef HAVE_LIBSSL */
+#define HAVE_LIBSSL 1
 
 /* Define to 1 if you have the `wldap32' library (-lwldap32). */
 /* #undef HAVE_LIBWLDAP32 */
@@ -769,7 +769,7 @@
 #define USE_REPL_SNPRINTF 1
 
 /* Define to build with (Open)SSL support. (--with-openssl) */
-/* #undef USE_SSL */
+#define USE_SSL 1
 
 /* Define to select SysV-style semaphores. */
 #define USE_SYSV_SEMAPHORES 1
