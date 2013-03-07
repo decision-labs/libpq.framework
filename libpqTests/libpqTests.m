@@ -15,8 +15,8 @@
     [super setUp];
     
     NSLog(@"%@ start", self.name);
-    conninfo = "dbname = postgres";
-    conn = PQconnectdb(conninfo);
+    conninfo = [NSString stringWithFormat:@"dbname='%@'", @"postgres"];
+    conn = PQconnectdb([conninfo UTF8String]);
 }
 
 - (void)tearDown
@@ -33,7 +33,6 @@
     if (PQstatus(conn) != CONNECTION_OK) {
         NSString *message = [[NSString alloc] initWithUTF8String:PQerrorMessage(conn)];
         NSLog(@"Connection to database failed: %@", message);
-        [message release];
     }
 }
 
@@ -46,7 +45,6 @@
     if (PQresultStatus(res) != PGRES_COMMAND_OK) {
         NSString *message = [[NSString alloc] initWithUTF8String:PQerrorMessage(conn)];
         NSLog(@"BEGIN command failed: %@", message);
-        [message release];
     }
     PQclear(res);
     
@@ -67,7 +65,6 @@
     {
         NSString *message = [[NSString alloc] initWithUTF8String:PQerrorMessage(conn)];
         NSLog(@"DECLARE CURSOR failed: %@", message);
-        [message release];
     }
     PQclear(res);
     
@@ -76,7 +73,6 @@
     {
         NSString *message = [[NSString alloc] initWithUTF8String:PQerrorMessage(conn)];
         NSLog(@"FETCH ALL failed: %@", message);
-        [message release];
     }
     
     int nFields = PQnfields(res);
@@ -84,7 +80,6 @@
     {
         NSString *name = [[NSString alloc] initWithUTF8String:PQfname(res, i)];
         NSLog(@"%@\n\n", name);
-        [name release];
     }
     
     for (int i = 0; i < PQntuples(res); i++)
@@ -92,7 +87,6 @@
         for (int j = 0; j < nFields; j++) {
             NSString *value = [[NSString alloc] initWithUTF8String:PQgetvalue(res, i, j)];
             NSLog(@"%@\n", value);
-            [value release];
         }
     }
     PQclear(res);

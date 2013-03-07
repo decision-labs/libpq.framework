@@ -11,7 +11,7 @@
 
 @interface libpqTests : SenTestCase {
 @private
-    const char *conninfo;
-    PGconn     *conn;
+    NSString *conninfo;
+    PGconn   *conn;
 }
 @end
