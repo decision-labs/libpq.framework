@@ -31,17 +31,25 @@ You can also download a precompiled `libpq.framework` from: [libpq.framework.zip
 
 ##Usage
 
-Drop the framework and copy it to your project and you should be ready to go. See libpq's [example programs](http://www.postgresql.org/docs/current/interactive/libpq-example.html) for sample code. In general for Objective-C one would need to do something like:
+Drop the framework into your project's Navigator and don't forget to copy it to your project, and you should be ready to go. See libpq's [example programs](http://www.postgresql.org/docs/current/interactive/libpq-example.html) for sample code. In general for Objective-C one would need to do something like:
 
 ```Objective-C
 #import <libpq/libpq-fe.h>
 
+const char *_connectionString;
 ...
-_pgconn = (PGconn *)PQconnectdb(_connectionString);
+PGconn *_pgconn = PQconnectdb(_connectionString);
 if (PQstatus(_pgconn) != CONNECTION_OK) {
     ...
 }
+
+PGresult *res = PQexec(_pgconn, "BEGIN");
+if (PQresultStatus(res) != PGRES_TUPLES_OK) {
+    ...
+}
+PQclear(res);
 ...
+
 PQfinish(_pgconn);
 ```
 
