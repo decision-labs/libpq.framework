@@ -26,7 +26,7 @@
 #define ALIGNOF_LONG 4
 
 /* The normal alignment of `long long int', in bytes. */
-/* #undef ALIGNOF_LONG_LONG_INT */
+#define ALIGNOF_LONG_LONG_INT 4
 
 /* The normal alignment of `short', in bytes. */
 #define ALIGNOF_SHORT 2
@@ -73,7 +73,7 @@
 
 /* float8, int8, and related values are passed by value if 'true', by
    reference if 'false' */
-#define FLOAT8PASSBYVAL true
+#define FLOAT8PASSBYVAL false
 
 /* Define to 1 if getpwuid_r() takes a 5th argument. */
 #define GETPWUID_R_5ARG /**/
@@ -456,7 +456,7 @@
 #define HAVE_STRERROR_R 1
 
 /* Define to 1 if cpp supports the ANSI # stringizing operator. */
-/* #undef HAVE_STRINGIZE */
+#define HAVE_STRINGIZE 1
 
 /* Define to 1 if you have the <strings.h> header file. */
 #define HAVE_STRINGS_H 1
@@ -658,13 +658,13 @@
 #define PACKAGE_NAME "PostgreSQL"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "PostgreSQL 9.2.1"
+#define PACKAGE_STRING "PostgreSQL 9.2.3"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "postgresql"
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "9.2.1"
+#define PACKAGE_VERSION "9.2.3"
 
 /* Define to the name of the default PostgreSQL service principal in Kerberos.
    (--with-krb-srvnam=NAME) */
@@ -674,13 +674,13 @@
 #define PG_MAJORVERSION "9.2"
 
 /* PostgreSQL version as a string */
-#define PG_VERSION "9.2.1"
+#define PG_VERSION "9.2.3"
 
 /* PostgreSQL version as a number */
-#define PG_VERSION_NUM 90201
+#define PG_VERSION_NUM 90203
 
 /* A string containing the version number, platform, and C compiler */
-#define PG_VERSION_STR "PostgreSQL 9.2.1 on arm-apple-darwin7, compiled by arm-apple-darwin10-llvm-gcc-4.2 (GCC) 4.2.1 (Based on Apple Inc. build 5658) (LLVM build 2410.2.00), 32-bit"
+#define PG_VERSION_STR "PostgreSQL 9.2.3 on arm-apple-darwin7, compiled by i686-apple-darwin10-llvm-gcc-4.2 (GCC) 4.2.1 (Based on Apple Inc. build 5658) (LLVM build 2410.2.00), 32-bit"
 
 /* Define to 1 to allow profiling output to be saved separately for each
    process. */
