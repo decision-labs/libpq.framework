@@ -29,6 +29,7 @@
 		4B4C4CD215040B7500840750 /* libpqTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B4C4CD115040B7500840750 /* libpqTests.m */; };
 		4B4C4E0C1504295600840750 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B4C4E0A1504295600840750 /* libcrypto.a */; };
 		4B4C4E0D1504295600840750 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B4C4E0B1504295600840750 /* libssl.a */; };
+		4B91EF2716F2110F00CC836E /* libpq-fe.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BBB04E316A91EE500CEE2AE /* libpq-fe.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4BBB04CA16A91EAE00CEE2AE /* auth.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BBB04C216A91EAE00CEE2AE /* auth.h */; };
 		4BBB04CB16A91EAE00CEE2AE /* be-fsstubs.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BBB04C316A91EAE00CEE2AE /* be-fsstubs.h */; };
 		4BBB04CC16A91EAE00CEE2AE /* crypt.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BBB04C416A91EAE00CEE2AE /* crypt.h */; };
@@ -53,7 +54,6 @@
 		4BBB04FC16A91EE500CEE2AE /* ip.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BBB04E016A91EE500CEE2AE /* ip.c */; };
 		4BBB04FD16A91EE500CEE2AE /* libpq-events.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BBB04E116A91EE500CEE2AE /* libpq-events.c */; };
 		4BBB04FE16A91EE500CEE2AE /* libpq-events.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BBB04E216A91EE500CEE2AE /* libpq-events.h */; };
-		4BBB04FF16A91EE500CEE2AE /* libpq-fe.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BBB04E316A91EE500CEE2AE /* libpq-fe.h */; };
 		4BBB050016A91EE500CEE2AE /* libpq-int.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BBB04E416A91EE500CEE2AE /* libpq-int.h */; };
 		4BBB050116A91EE500CEE2AE /* md5.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BBB04E516A91EE500CEE2AE /* md5.c */; };
 		4BBB050216A91EE500CEE2AE /* noblock.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BBB04E616A91EE500CEE2AE /* noblock.c */; };
@@ -596,6 +596,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4BE9310015057FE60021F063 /* postgres_ext.h in Headers */,
+				4B91EF2716F2110F00CC836E /* libpq-fe.h in Headers */,
 				4BE930F515057FE60021F063 /* c.h in Headers */,
 				4BE930F615057FE60021F063 /* getaddrinfo.h in Headers */,
 				4BE930F715057FE60021F063 /* ip.h in Headers */,
@@ -695,7 +696,6 @@
 				4BBB04D116A91EAE00CEE2AE /* pqsignal.h in Headers */,
 				4BBB04F216A91EE500CEE2AE /* fe-auth.h in Headers */,
 				4BBB04FE16A91EE500CEE2AE /* libpq-events.h in Headers */,
-				4BBB04FF16A91EE500CEE2AE /* libpq-fe.h in Headers */,
 				4BBB050016A91EE500CEE2AE /* libpq-int.h in Headers */,
 				4BBB050516A91EE500CEE2AE /* pqexpbuffer.h in Headers */,
 				4BBB050716A91EE500CEE2AE /* pqsignal.h in Headers */,
@@ -920,7 +920,7 @@
 					include,
 					src/include,
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				SDKROOT = iphoneos;
 				USER_HEADER_SEARCH_PATHS = "";
 				WARNING_CFLAGS = "";
@@ -951,7 +951,7 @@
 					include,
 					src/include,
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				SDKROOT = iphoneos;
 				USER_HEADER_SEARCH_PATHS = "";
 				"USER_HEADER_SEARCH_PATHS[arch=*]" = "";
