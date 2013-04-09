@@ -27,7 +27,7 @@ This repository allows you to easily create a `libpq.framework` to use in your i
 
 ##Download precompiled Framework
 
-You can also download a precompiled `libpq.framework` from: [libpq.framework.zip](https://github.com/downloads/spacialdb/libpq.framework/libpq.framework.zip)
+You can also download a precompiled `libpq.framework` from: [libpq.framework.zip](http://bit.ly/libpq-framework)
 
 ##Usage
 
