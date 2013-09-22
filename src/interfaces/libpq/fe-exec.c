@@ -3,7 +3,7 @@
  * fe-exec.c
  *	  functions related to sending a query down to the backend
  *
- * Portions Copyright (c) 1996-2012, PostgreSQL Global Development Group
+ * Portions Copyright (c) 1996-2013, PostgreSQL Global Development Group
  * Portions Copyright (c) 1994, Regents of the University of California
  *
  *
@@ -279,7 +279,7 @@ PQsetResultAttrs(PGresult *res, int numAttributes, PGresAttDesc *attDescs)
  *	 PG_COPYRES_ATTRS - Copy the source result's attributes
  *
  *	 PG_COPYRES_TUPLES - Copy the source result's tuples.  This implies
- *	 copying the attrs, seeeing how the attrs are needed by the tuples.
+ *	 copying the attrs, seeing how the attrs are needed by the tuples.
  *
  *	 PG_COPYRES_EVENTS - Copy the source result's events.
  *
@@ -1113,6 +1113,7 @@ PQsendQuery(PGconn *conn, const char *query)
 	if (!PQsendQueryStart(conn))
 		return 0;
 
+	/* check the argument */
 	if (!query)
 	{
 		printfPQExpBuffer(&conn->errorMessage,
@@ -1170,10 +1171,17 @@ PQsendQueryParams(PGconn *conn,
 	if (!PQsendQueryStart(conn))
 		return 0;
 
+	/* check the arguments */
 	if (!command)
 	{
 		printfPQExpBuffer(&conn->errorMessage,
 						libpq_gettext("command string is a null pointer\n"));
+		return 0;
+	}
+	if (nParams < 0 || nParams > 65535)
+	{
+		printfPQExpBuffer(&conn->errorMessage,
+		libpq_gettext("number of parameters must be between 0 and 65535\n"));
 		return 0;
 	}
 
@@ -1203,17 +1211,23 @@ PQsendPrepare(PGconn *conn,
 	if (!PQsendQueryStart(conn))
 		return 0;
 
+	/* check the arguments */
 	if (!stmtName)
 	{
 		printfPQExpBuffer(&conn->errorMessage,
 						libpq_gettext("statement name is a null pointer\n"));
 		return 0;
 	}
-
 	if (!query)
 	{
 		printfPQExpBuffer(&conn->errorMessage,
 						libpq_gettext("command string is a null pointer\n"));
+		return 0;
+	}
+	if (nParams < 0 || nParams > 65535)
+	{
+		printfPQExpBuffer(&conn->errorMessage,
+		libpq_gettext("number of parameters must be between 0 and 65535\n"));
 		return 0;
 	}
 
@@ -1298,10 +1312,17 @@ PQsendQueryPrepared(PGconn *conn,
 	if (!PQsendQueryStart(conn))
 		return 0;
 
+	/* check the arguments */
 	if (!stmtName)
 	{
 		printfPQExpBuffer(&conn->errorMessage,
 						libpq_gettext("statement name is a null pointer\n"));
+		return 0;
+	}
+	if (nParams < 0 || nParams > 65535)
+	{
+		printfPQExpBuffer(&conn->errorMessage,
+		libpq_gettext("number of parameters must be between 0 and 65535\n"));
 		return 0;
 	}
 
@@ -2224,7 +2245,8 @@ PQputCopyEnd(PGconn *conn, const char *errormsg)
 {
 	if (!conn)
 		return -1;
-	if (conn->asyncStatus != PGASYNC_COPY_IN)
+	if (conn->asyncStatus != PGASYNC_COPY_IN &&
+		conn->asyncStatus != PGASYNC_COPY_BOTH)
 	{
 		printfPQExpBuffer(&conn->errorMessage,
 						  libpq_gettext("no COPY in progress\n"));
@@ -2284,7 +2306,10 @@ PQputCopyEnd(PGconn *conn, const char *errormsg)
 	}
 
 	/* Return to active duty */
-	conn->asyncStatus = PGASYNC_BUSY;
+	if (conn->asyncStatus == PGASYNC_COPY_BOTH)
+		conn->asyncStatus = PGASYNC_COPY_OUT;
+	else
+		conn->asyncStatus = PGASYNC_BUSY;
 	resetPQExpBuffer(&conn->errorMessage);
 
 	/* Try to flush data */

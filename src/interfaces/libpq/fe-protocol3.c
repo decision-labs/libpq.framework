@@ -3,7 +3,7 @@
  * fe-protocol3.c
  *	  functions that are specific to frontend/backend protocol version 3
  *
- * Portions Copyright (c) 1996-2012, PostgreSQL Global Development Group
+ * Portions Copyright (c) 1996-2013, PostgreSQL Global Development Group
  * Portions Copyright (c) 1994, Regents of the University of California
  *
  *
@@ -430,9 +430,7 @@ handleSyncLoss(PGconn *conn, char id, int msgLength)
 	pqSaveErrorResult(conn);
 	conn->asyncStatus = PGASYNC_READY;	/* drop out of GetResult wait loop */
 
-	pqsecure_close(conn);
-	closesocket(conn->sock);
-	conn->sock = -1;
+	pqDropConnection(conn);
 	conn->status = CONNECTION_BAD;		/* No more connection to backend */
 }
 
@@ -919,6 +917,29 @@ pqGetErrorNotice3(PGconn *conn, bool isError)
 		val = PQresultErrorField(res, PG_DIAG_CONTEXT);
 		if (val)
 			appendPQExpBuffer(&workBuf, libpq_gettext("CONTEXT:  %s\n"), val);
+	}
+	if (conn->verbosity == PQERRORS_VERBOSE)
+	{
+		val = PQresultErrorField(res, PG_DIAG_SCHEMA_NAME);
+		if (val)
+			appendPQExpBuffer(&workBuf,
+							  libpq_gettext("SCHEMA NAME:  %s\n"), val);
+		val = PQresultErrorField(res, PG_DIAG_TABLE_NAME);
+		if (val)
+			appendPQExpBuffer(&workBuf,
+							  libpq_gettext("TABLE NAME:  %s\n"), val);
+		val = PQresultErrorField(res, PG_DIAG_COLUMN_NAME);
+		if (val)
+			appendPQExpBuffer(&workBuf,
+							  libpq_gettext("COLUMN NAME:  %s\n"), val);
+		val = PQresultErrorField(res, PG_DIAG_DATATYPE_NAME);
+		if (val)
+			appendPQExpBuffer(&workBuf,
+							  libpq_gettext("DATATYPE NAME:  %s\n"), val);
+		val = PQresultErrorField(res, PG_DIAG_CONSTRAINT_NAME);
+		if (val)
+			appendPQExpBuffer(&workBuf,
+							  libpq_gettext("CONSTRAINT NAME:  %s\n"), val);
 	}
 	if (conn->verbosity == PQERRORS_VERBOSE)
 	{
@@ -1445,7 +1466,25 @@ getCopyDataMessage(PGconn *conn)
 				break;
 			case 'd':			/* Copy Data, pass it back to caller */
 				return msgLength;
+			case 'c':
+
+				/*
+				 * If this is a CopyDone message, exit COPY_OUT mode and let
+				 * caller read status with PQgetResult().  If we're in
+				 * COPY_BOTH mode, return to COPY_IN mode.
+				 */
+				if (conn->asyncStatus == PGASYNC_COPY_BOTH)
+					conn->asyncStatus = PGASYNC_COPY_IN;
+				else
+					conn->asyncStatus = PGASYNC_BUSY;
+				return -1;
 			default:			/* treat as end of copy */
+
+				/*
+				 * Any other message terminates either COPY_IN or COPY_BOTH
+				 * mode.
+				 */
+				conn->asyncStatus = PGASYNC_BUSY;
 				return -1;
 		}
 
@@ -1478,17 +1517,7 @@ pqGetCopyData3(PGconn *conn, char **buffer, int async)
 		 */
 		msgLength = getCopyDataMessage(conn);
 		if (msgLength < 0)
-		{
-			/*
-			 * On end-of-copy, exit COPY_OUT or COPY_BOTH mode and let caller
-			 * read status with PQgetResult().	The normal case is that it's
-			 * Copy Done, but we let parseInput read that.	If error, we
-			 * expect the state was already changed.
-			 */
-			if (msgLength == -1)
-				conn->asyncStatus = PGASYNC_BUSY;
 			return msgLength;	/* end-of-copy or error */
-		}
 		if (msgLength == 0)
 		{
 			/* Don't block if async read requested */
@@ -1540,7 +1569,8 @@ pqGetline3(PGconn *conn, char *s, int maxlen)
 	int			status;
 
 	if (conn->sock < 0 ||
-		conn->asyncStatus != PGASYNC_COPY_OUT ||
+		(conn->asyncStatus != PGASYNC_COPY_OUT &&
+		 conn->asyncStatus != PGASYNC_COPY_BOTH) ||
 		conn->copy_is_binary)
 	{
 		printfPQExpBuffer(&conn->errorMessage,
@@ -1591,7 +1621,8 @@ pqGetlineAsync3(PGconn *conn, char *buffer, int bufsize)
 	int			msgLength;
 	int			avail;
 
-	if (conn->asyncStatus != PGASYNC_COPY_OUT)
+	if (conn->asyncStatus != PGASYNC_COPY_OUT
+		&& conn->asyncStatus != PGASYNC_COPY_BOTH)
 		return -1;				/* we are not doing a copy... */
 
 	/*
@@ -1645,7 +1676,8 @@ pqEndcopy3(PGconn *conn)
 	PGresult   *result;
 
 	if (conn->asyncStatus != PGASYNC_COPY_IN &&
-		conn->asyncStatus != PGASYNC_COPY_OUT)
+		conn->asyncStatus != PGASYNC_COPY_OUT &&
+		conn->asyncStatus != PGASYNC_COPY_BOTH)
 	{
 		printfPQExpBuffer(&conn->errorMessage,
 						  libpq_gettext("no COPY in progress\n"));
@@ -1653,7 +1685,8 @@ pqEndcopy3(PGconn *conn)
 	}
 
 	/* Send the CopyDone message if needed */
-	if (conn->asyncStatus == PGASYNC_COPY_IN)
+	if (conn->asyncStatus == PGASYNC_COPY_IN ||
+		conn->asyncStatus == PGASYNC_COPY_BOTH)
 	{
 		if (pqPutMsgStart('c', false, conn) < 0 ||
 			pqPutMsgEnd(conn) < 0)

@@ -30,6 +30,9 @@
 		4B4C4E0C1504295600840750 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B4C4E0A1504295600840750 /* libcrypto.a */; };
 		4B4C4E0D1504295600840750 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B4C4E0B1504295600840750 /* libssl.a */; };
 		4B91EF2716F2110F00CC836E /* libpq-fe.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BBB04E316A91EE500CEE2AE /* libpq-fe.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4BB6232417EF963300920783 /* fe_memutils.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BB6232317EF963300920783 /* fe_memutils.c */; };
+		4BB6232817EF965300920783 /* fe_memutils.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BB6232617EF965300920783 /* fe_memutils.h */; };
+		4BB6232C17EF96BF00920783 /* palloc.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BB6232B17EF96BF00920783 /* palloc.h */; };
 		4BBB04CA16A91EAE00CEE2AE /* auth.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BBB04C216A91EAE00CEE2AE /* auth.h */; };
 		4BBB04CB16A91EAE00CEE2AE /* be-fsstubs.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BBB04C316A91EAE00CEE2AE /* be-fsstubs.h */; };
 		4BBB04CC16A91EAE00CEE2AE /* crypt.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BBB04C416A91EAE00CEE2AE /* crypt.h */; };
@@ -186,6 +189,9 @@
 		4B4C4CD115040B7500840750 /* libpqTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = libpqTests.m; sourceTree = "<group>"; };
 		4B4C4E0A1504295600840750 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = lib/libcrypto.a; sourceTree = "<group>"; };
 		4B4C4E0B1504295600840750 /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssl.a; path = lib/libssl.a; sourceTree = "<group>"; };
+		4BB6232317EF963300920783 /* fe_memutils.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fe_memutils.c; sourceTree = "<group>"; };
+		4BB6232617EF965300920783 /* fe_memutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fe_memutils.h; sourceTree = "<group>"; };
+		4BB6232B17EF96BF00920783 /* palloc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = palloc.h; sourceTree = "<group>"; };
 		4BBB04C216A91EAE00CEE2AE /* auth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = auth.h; sourceTree = "<group>"; };
 		4BBB04C316A91EAE00CEE2AE /* be-fsstubs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "be-fsstubs.h"; sourceTree = "<group>"; };
 		4BBB04C416A91EAE00CEE2AE /* crypt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crypt.h; sourceTree = "<group>"; };
@@ -389,6 +395,30 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		4BB6232217EF963300920783 /* common */ = {
+			isa = PBXGroup;
+			children = (
+				4BB6232317EF963300920783 /* fe_memutils.c */,
+			);
+			path = common;
+			sourceTree = "<group>";
+		};
+		4BB6232517EF965300920783 /* common */ = {
+			isa = PBXGroup;
+			children = (
+				4BB6232617EF965300920783 /* fe_memutils.h */,
+			);
+			path = common;
+			sourceTree = "<group>";
+		};
+		4BB6232A17EF96BF00920783 /* utils */ = {
+			isa = PBXGroup;
+			children = (
+				4BB6232B17EF96BF00920783 /* palloc.h */,
+			);
+			path = utils;
+			sourceTree = "<group>";
+		};
 		4BC3E96D15058E5800D47056 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
@@ -484,6 +514,7 @@
 		4BE930C315057FE60021F063 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				4BB6232217EF963300920783 /* common */,
 				4BC3E96D15058E5800D47056 /* Supporting Files */,
 				4BE930C415057FE60021F063 /* include */,
 				4BE930D415057FE60021F063 /* interfaces */,
@@ -495,6 +526,8 @@
 		4BE930C415057FE60021F063 /* include */ = {
 			isa = PBXGroup;
 			children = (
+				4BB6232A17EF96BF00920783 /* utils */,
+				4BB6232517EF965300920783 /* common */,
 				4BC3E96E15058F8D00D47056 /* openssl */,
 				4BE930C515057FE60021F063 /* c.h */,
 				4BE930C615057FE60021F063 /* getaddrinfo.h */,
@@ -681,6 +714,8 @@
 				4BC3E9FD15058F8D00D47056 /* ts.h in Headers */,
 				4BC3E9FE15058F8D00D47056 /* txt_db.h in Headers */,
 				4BC3E9FF15058F8D00D47056 /* ui.h in Headers */,
+				4BB6232817EF965300920783 /* fe_memutils.h in Headers */,
+				4BB6232C17EF96BF00920783 /* palloc.h in Headers */,
 				4BC3EA0015058F8D00D47056 /* ui_compat.h in Headers */,
 				4BC3EA0115058F8D00D47056 /* whrlpool.h in Headers */,
 				4BC3EA0215058F8D00D47056 /* x509.h in Headers */,
@@ -840,6 +875,7 @@
 				4BBB04F816A91EE500CEE2AE /* fe-protocol2.c in Sources */,
 				4BBB04F916A91EE500CEE2AE /* fe-protocol3.c in Sources */,
 				4BBB04FA16A91EE500CEE2AE /* fe-secure.c in Sources */,
+				4BB6232417EF963300920783 /* fe_memutils.c in Sources */,
 				4BBB04FB16A91EE500CEE2AE /* inet_net_ntop.c in Sources */,
 				4BBB04FC16A91EE500CEE2AE /* ip.c in Sources */,
 				4BBB04FD16A91EE500CEE2AE /* libpq-events.c in Sources */,

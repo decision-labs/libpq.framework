@@ -9,7 +9,7 @@
  *	  more likely to break across PostgreSQL releases than code that uses
  *	  only the official API.
  *
- * Portions Copyright (c) 1996-2012, PostgreSQL Global Development Group
+ * Portions Copyright (c) 1996-2013, PostgreSQL Global Development Group
  * Portions Copyright (c) 1994, Regents of the University of California
  *
  * src/interfaces/libpq/libpq-int.h
@@ -271,8 +271,11 @@ typedef struct pgLobjfuncs
 	Oid			fn_lo_create;	/* OID of backend function lo_create	*/
 	Oid			fn_lo_unlink;	/* OID of backend function lo_unlink	*/
 	Oid			fn_lo_lseek;	/* OID of backend function lo_lseek		*/
+	Oid			fn_lo_lseek64;	/* OID of backend function lo_lseek64	*/
 	Oid			fn_lo_tell;		/* OID of backend function lo_tell		*/
+	Oid			fn_lo_tell64;	/* OID of backend function lo_tell64	*/
 	Oid			fn_lo_truncate; /* OID of backend function lo_truncate	*/
+	Oid			fn_lo_truncate64;		/* OID of function lo_truncate64 */
 	Oid			fn_lo_read;		/* OID of backend function LOread		*/
 	Oid			fn_lo_write;	/* OID of backend function LOwrite		*/
 } PGlobjfuncs;
@@ -488,6 +491,7 @@ extern char *const pgresStatus[];
 
 /* === in fe-connect.c === */
 
+extern void pqDropConnection(PGconn *conn);
 extern int pqPacketSend(PGconn *conn, char pack_type,
 			 const void *buf, size_t buf_len);
 extern bool pqGetHomeDirectory(char *buf, int bufsize);

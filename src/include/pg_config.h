@@ -515,6 +515,9 @@
 /* Define to 1 if you have the `symlink' function. */
 #define HAVE_SYMLINK 1
 
+/* Define to 1 if you have the `sync_file_range' function. */
+/* #undef HAVE_SYNC_FILE_RANGE */
+
 /* Define to 1 if you have the syslog interface. */
 #define HAVE_SYSLOG 1
 
@@ -618,9 +621,6 @@
 /* Define to 1 if you have the `vsnprintf' function. */
 #define HAVE_VSNPRINTF 1
 
-/* Define to 1 if you have the `waitpid' function. */
-#define HAVE_WAITPID 1
-
 /* Define to 1 if you have the <wchar.h> header file. */
 #define HAVE_WCHAR_H 1
 
@@ -635,6 +635,21 @@
 
 /* Define to 1 if you have the <winldap.h> header file. */
 /* #undef HAVE_WINLDAP_H */
+
+/* Define to 1 if your compiler understands __builtin_constant_p. */
+#define HAVE__BUILTIN_CONSTANT_P 1
+
+/* Define to 1 if your compiler understands __builtin_types_compatible_p. */
+#define HAVE__BUILTIN_TYPES_COMPATIBLE_P 1
+
+/* Define to 1 if your compiler understands __builtin_unreachable. */
+#define HAVE__BUILTIN_UNREACHABLE 1
+
+/* Define to 1 if your compiler understands _Static_assert. */
+#define HAVE__STATIC_ASSERT 1
+
+/* Define to 1 if your compiler understands __VA_ARGS__ in macros. */
+#define HAVE__VA_ARGS 1
 
 /* Define to the appropriate snprintf format for 64-bit ints. */
 #define INT64_FORMAT "%lld"
@@ -658,29 +673,36 @@
 #define PACKAGE_NAME "PostgreSQL"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "PostgreSQL 9.2.3"
+#define PACKAGE_STRING "PostgreSQL 9.3.0"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "postgresql"
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "9.2.3"
+#define PACKAGE_VERSION "9.3.0"
+
+/* Define to the name of a signed 64-bit integer type. */
+#define PG_INT64_TYPE long long int
 
 /* Define to the name of the default PostgreSQL service principal in Kerberos.
    (--with-krb-srvnam=NAME) */
 #define PG_KRB_SRVNAM "postgres"
 
 /* PostgreSQL major version as a string */
-#define PG_MAJORVERSION "9.2"
+#define PG_MAJORVERSION "9.3"
+
+/* Define to 1 if "static inline" works without unwanted warnings from
+   compilations where static inline functions are defined but not called. */
+#define PG_USE_INLINE 1
 
 /* PostgreSQL version as a string */
-#define PG_VERSION "9.2.3"
+#define PG_VERSION "9.3.0"
 
 /* PostgreSQL version as a number */
-#define PG_VERSION_NUM 90203
+#define PG_VERSION_NUM 90300
 
 /* A string containing the version number, platform, and C compiler */
-#define PG_VERSION_STR "PostgreSQL 9.2.3 on arm-apple-darwin7, compiled by i686-apple-darwin10-llvm-gcc-4.2 (GCC) 4.2.1 (Based on Apple Inc. build 5658) (LLVM build 2410.2.00), 32-bit"
+#define PG_VERSION_STR "PostgreSQL 9.3.0 on arm-apple-darwin9, compiled by Apple LLVM version 5.0 (clang-500.2.75) (based on LLVM 3.3svn), 32-bit"
 
 /* Define to 1 to allow profiling output to be saved separately for each
    process. */
@@ -740,10 +762,6 @@
 /* Define to 1 if you want float8, int8, etc values to be passed by value.
    (--enable-float8-byval) */
 /* #undef USE_FLOAT8_BYVAL */
-
-/* Define to 1 if "static inline" works without unwanted warnings from
-   compilations where static inline functions are defined but not called. */
-#define USE_INLINE 1
 
 /* Define to 1 if you want 64-bit integer timestamp and interval support.
    (--enable-integer-datetimes) */
