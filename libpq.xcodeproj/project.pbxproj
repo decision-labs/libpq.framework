@@ -29,6 +29,7 @@
 		4B4C4CD215040B7500840750 /* libpqTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B4C4CD115040B7500840750 /* libpqTests.m */; };
 		4B4C4E0C1504295600840750 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B4C4E0A1504295600840750 /* libcrypto.a */; };
 		4B4C4E0D1504295600840750 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B4C4E0B1504295600840750 /* libssl.a */; };
+		4B5894F117EF99B90039A02A /* pg_config_ext.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B5894F017EF99B90039A02A /* pg_config_ext.h */; };
 		4B91EF2716F2110F00CC836E /* libpq-fe.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BBB04E316A91EE500CEE2AE /* libpq-fe.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4BB6232417EF963300920783 /* fe_memutils.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BB6232317EF963300920783 /* fe_memutils.c */; };
 		4BB6232817EF965300920783 /* fe_memutils.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BB6232617EF965300920783 /* fe_memutils.h */; };
@@ -189,6 +190,7 @@
 		4B4C4CD115040B7500840750 /* libpqTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = libpqTests.m; sourceTree = "<group>"; };
 		4B4C4E0A1504295600840750 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = lib/libcrypto.a; sourceTree = "<group>"; };
 		4B4C4E0B1504295600840750 /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssl.a; path = lib/libssl.a; sourceTree = "<group>"; };
+		4B5894F017EF99B90039A02A /* pg_config_ext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pg_config_ext.h; sourceTree = "<group>"; };
 		4BB6232317EF963300920783 /* fe_memutils.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fe_memutils.c; sourceTree = "<group>"; };
 		4BB6232617EF965300920783 /* fe_memutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fe_memutils.h; sourceTree = "<group>"; };
 		4BB6232B17EF96BF00920783 /* palloc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = palloc.h; sourceTree = "<group>"; };
@@ -526,6 +528,7 @@
 		4BE930C415057FE60021F063 /* include */ = {
 			isa = PBXGroup;
 			children = (
+				4B5894F017EF99B90039A02A /* pg_config_ext.h */,
 				4BB6232A17EF96BF00920783 /* utils */,
 				4BB6232517EF965300920783 /* common */,
 				4BC3E96E15058F8D00D47056 /* openssl */,
@@ -687,6 +690,7 @@
 				4BC3E9E215058F8D00D47056 /* objects.h in Headers */,
 				4BC3E9E315058F8D00D47056 /* ocsp.h in Headers */,
 				4BC3E9E415058F8D00D47056 /* opensslconf.h in Headers */,
+				4B5894F117EF99B90039A02A /* pg_config_ext.h in Headers */,
 				4BC3E9E515058F8D00D47056 /* opensslv.h in Headers */,
 				4BC3E9E615058F8D00D47056 /* ossl_typ.h in Headers */,
 				4BC3E9E715058F8D00D47056 /* pem.h in Headers */,
