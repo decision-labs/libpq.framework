@@ -21,7 +21,7 @@
 
 - (void)tearDown
 {
-    NSLog(@"%@ start", self.name);
+    NSLog(@"%@ stop", self.name);
     PQfinish(conn);
     
     [super tearDown];
