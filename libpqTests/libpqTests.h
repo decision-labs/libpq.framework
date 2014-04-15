@@ -6,10 +6,10 @@
 //  Copyright (c) 2012 SpacialDB. All rights reserved.
 //
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 #import "libpq-fe.h"
 
-@interface libpqTests : SenTestCase {
+@interface libpqTests : XCTestCase {
 @private
     NSString *conninfo;
     PGconn   *conn;
