@@ -50,7 +50,11 @@
 /* Must undef pg_config_ext.h symbols before including pg_config.h */
 #undef PG_INT64_TYPE
 
+#if __LP64__
+#include "pg_config_64.h"
+#else
 #include "pg_config.h"
+#endif
 #include "pg_config_manual.h"	/* must be after pg_config.h */
 
 /*

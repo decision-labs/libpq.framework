@@ -22,6 +22,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		4B471B4E1ABF1CD500DA4F33 /* pg_config_64.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B471B4D1ABF1CD500DA4F33 /* pg_config_64.h */; };
 		4B4C4CB515040B7500840750 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B4C4CB415040B7500840750 /* Foundation.framework */; };
 		4B4C4CC615040B7500840750 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B4C4CB415040B7500840750 /* Foundation.framework */; };
 		4B4C4CCF15040B7500840750 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4B4C4CCD15040B7500840750 /* InfoPlist.strings */; };
@@ -59,7 +60,6 @@
 		4BBB050416A91EE500CEE2AE /* pqexpbuffer.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BBB04E816A91EE500CEE2AE /* pqexpbuffer.c */; };
 		4BBB050516A91EE500CEE2AE /* pqexpbuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BBB04E916A91EE500CEE2AE /* pqexpbuffer.h */; };
 		4BBB050616A91EE500CEE2AE /* pqsignal.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BBB04EA16A91EE500CEE2AE /* pqsignal.c */; };
-		4BBB050716A91EE500CEE2AE /* pqsignal.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BBB04EB16A91EE500CEE2AE /* pqsignal.h */; };
 		4BBB050816A91EE500CEE2AE /* snprintf.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BBB04EC16A91EE500CEE2AE /* snprintf.c */; };
 		4BBB050916A91EE500CEE2AE /* thread.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BBB04ED16A91EE500CEE2AE /* thread.c */; };
 		4BBB050A16A91EE500CEE2AE /* wchar.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BBB04EE16A91EE500CEE2AE /* wchar.c */; };
@@ -172,9 +172,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4B471B4D1ABF1CD500DA4F33 /* pg_config_64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pg_config_64.h; sourceTree = "<group>"; };
 		4B4C4CB115040B7500840750 /* libpq.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpq.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B4C4CB415040B7500840750 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		4B4C4CC115040B7500840750 /* libpqTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = libpqTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4B4C4CC115040B7500840750 /* libpqTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = libpqTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B4C4CCC15040B7500840750 /* libpqTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "libpqTests-Info.plist"; sourceTree = "<group>"; };
 		4B4C4CCE15040B7500840750 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		4B4C4CD015040B7500840750 /* libpqTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = libpqTests.h; sourceTree = "<group>"; };
@@ -212,7 +213,6 @@
 		4BBB04E816A91EE500CEE2AE /* pqexpbuffer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pqexpbuffer.c; sourceTree = "<group>"; };
 		4BBB04E916A91EE500CEE2AE /* pqexpbuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pqexpbuffer.h; sourceTree = "<group>"; };
 		4BBB04EA16A91EE500CEE2AE /* pqsignal.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pqsignal.c; sourceTree = "<group>"; };
-		4BBB04EB16A91EE500CEE2AE /* pqsignal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pqsignal.h; sourceTree = "<group>"; };
 		4BBB04EC16A91EE500CEE2AE /* snprintf.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = snprintf.c; sourceTree = "<group>"; };
 		4BBB04ED16A91EE500CEE2AE /* thread.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = thread.c; sourceTree = "<group>"; };
 		4BBB04EE16A91EE500CEE2AE /* wchar.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = wchar.c; sourceTree = "<group>"; };
@@ -344,7 +344,7 @@
 			isa = PBXGroup;
 			children = (
 				4B4C4CB115040B7500840750 /* libpq.a */,
-				4B4C4CC115040B7500840750 /* libpqTests.octest */,
+				4B4C4CC115040B7500840750 /* libpqTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -519,6 +519,7 @@
 				4BE930C715057FE60021F063 /* libpq */,
 				4BE930CC15057FE60021F063 /* mb */,
 				4BE930CE15057FE60021F063 /* pg_config.h */,
+				4B471B4D1ABF1CD500DA4F33 /* pg_config_64.h */,
 				4BE930CF15057FE60021F063 /* pg_config_manual.h */,
 				4BE930D015057FE60021F063 /* pg_config_os.h */,
 				4BE930D115057FE60021F063 /* port.h */,
@@ -583,7 +584,6 @@
 				4BBB04E816A91EE500CEE2AE /* pqexpbuffer.c */,
 				4BBB04E916A91EE500CEE2AE /* pqexpbuffer.h */,
 				4BBB04EA16A91EE500CEE2AE /* pqsignal.c */,
-				4BBB04EB16A91EE500CEE2AE /* pqsignal.h */,
 				4BBB04EC16A91EE500CEE2AE /* snprintf.c */,
 				4BBB04ED16A91EE500CEE2AE /* thread.c */,
 				4BBB04EE16A91EE500CEE2AE /* wchar.c */,
@@ -699,13 +699,13 @@
 				4BC3EA0115058F8D00D47056 /* whrlpool.h in Headers */,
 				4BC3EA0215058F8D00D47056 /* x509.h in Headers */,
 				4BC3EA0315058F8D00D47056 /* x509_vfy.h in Headers */,
+				4B471B4E1ABF1CD500DA4F33 /* pg_config_64.h in Headers */,
 				4BC3EA0415058F8D00D47056 /* x509v3.h in Headers */,
 				4BBB04D116A91EAE00CEE2AE /* pqsignal.h in Headers */,
 				4BBB04F216A91EE500CEE2AE /* fe-auth.h in Headers */,
 				4BBB04FE16A91EE500CEE2AE /* libpq-events.h in Headers */,
 				4BBB050016A91EE500CEE2AE /* libpq-int.h in Headers */,
 				4BBB050516A91EE500CEE2AE /* pqexpbuffer.h in Headers */,
-				4BBB050716A91EE500CEE2AE /* pqsignal.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -746,7 +746,7 @@
 			);
 			name = libpqTests;
 			productName = libpqTests;
-			productReference = 4B4C4CC115040B7500840750 /* libpqTests.octest */;
+			productReference = 4B4C4CC115040B7500840750 /* libpqTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -756,7 +756,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastTestingUpgradeCheck = 0510;
-				LastUpgradeCheck = 0500;
+				LastUpgradeCheck = 0630;
 			};
 			buildConfigurationList = 4B4C4CAB15040B7500840750 /* Build configuration list for PBXProject "libpq" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -907,10 +907,13 @@
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -950,9 +953,12 @@
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
 				"GCC_PREPROCESSOR_DEFINITIONS[arch=*]" = (
 					"FRONTEND=1",
 					"UNSAFE_STAT_OK=1",
