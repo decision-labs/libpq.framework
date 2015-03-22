@@ -15,7 +15,7 @@
     [super setUp];
     
     NSLog(@"%@ start", self.name);
-    conninfo = [NSString stringWithFormat:@"dbname='%@'", @"postgres"];
+    conninfo = [NSString stringWithFormat:@"user='%@' dbname='%@'", @"kashif", @"postgres"];
     conn = PQconnectdb([conninfo UTF8String]);
 }
 
@@ -32,7 +32,7 @@
     NSLog(@"%@ start", self.name);
     if (PQstatus(conn) != CONNECTION_OK) {
         NSString *message = [[NSString alloc] initWithUTF8String:PQerrorMessage(conn)];
-        NSLog(@"Connection to database failed: %@", message);
+        XCTFail(@"Connection to database failed: %@", message);
     }
 }
 
@@ -44,7 +44,7 @@
     res = PQexec(conn, "BEGIN");
     if (PQresultStatus(res) != PGRES_COMMAND_OK) {
         NSString *message = [[NSString alloc] initWithUTF8String:PQerrorMessage(conn)];
-        NSLog(@"BEGIN command failed: %@", message);
+        XCTFail(@"BEGIN command failed: %@", message);
     }
     PQclear(res);
     
@@ -64,7 +64,7 @@
     if (PQresultStatus(res) != PGRES_COMMAND_OK)
     {
         NSString *message = [[NSString alloc] initWithUTF8String:PQerrorMessage(conn)];
-        NSLog(@"DECLARE CURSOR failed: %@", message);
+        XCTFail(@"DECLARE CURSOR failed: %@", message);
     }
     PQclear(res);
     
@@ -72,7 +72,7 @@
     if (PQresultStatus(res) != PGRES_TUPLES_OK)
     {
         NSString *message = [[NSString alloc] initWithUTF8String:PQerrorMessage(conn)];
-        NSLog(@"FETCH ALL failed: %@", message);
+        XCTFail(@"FETCH ALL failed: %@", message);
     }
     
     int nFields = PQnfields(res);
