@@ -3,7 +3,7 @@
  * ip.c
  *	  IPv6-aware network access.
  *
- * Portions Copyright (c) 1996-2011, PostgreSQL Global Development Group
+ * Portions Copyright (c) 1996-2014, PostgreSQL Global Development Group
  * Portions Copyright (c) 1994, Regents of the University of California
  *
  *
@@ -247,11 +247,6 @@ getnameinfo_unix(const struct sockaddr_un * sa, int salen,
 		(node == NULL && service == NULL))
 		return EAI_FAIL;
 
-	/* We don't support those. */
-	if ((node && !(flags & NI_NUMERICHOST))
-		|| (service && !(flags & NI_NUMERICSERV)))
-		return EAI_FAIL;
-
 	if (node)
 	{
 		ret = snprintf(node, nodelen, "%s", "[local]");
@@ -283,14 +278,14 @@ pg_range_sockaddr(const struct sockaddr_storage * addr,
 				  const struct sockaddr_storage * netmask)
 {
 	if (addr->ss_family == AF_INET)
-		return range_sockaddr_AF_INET((struct sockaddr_in *) addr,
-									  (struct sockaddr_in *) netaddr,
-									  (struct sockaddr_in *) netmask);
+		return range_sockaddr_AF_INET((const struct sockaddr_in *) addr,
+									  (const struct sockaddr_in *) netaddr,
+									  (const struct sockaddr_in *) netmask);
 #ifdef HAVE_IPV6
 	else if (addr->ss_family == AF_INET6)
-		return range_sockaddr_AF_INET6((struct sockaddr_in6 *) addr,
-									   (struct sockaddr_in6 *) netaddr,
-									   (struct sockaddr_in6 *) netmask);
+		return range_sockaddr_AF_INET6((const struct sockaddr_in6 *) addr,
+									   (const struct sockaddr_in6 *) netaddr,
+									   (const struct sockaddr_in6 *) netmask);
 #endif
 	else
 		return 0;
@@ -552,7 +547,7 @@ pg_foreach_ifaddr(PgIfAddrCallback callback, void *cb_data)
 	int			error;
 
 	sock = WSASocket(AF_INET, SOCK_DGRAM, 0, 0, 0, 0);
-	if (sock == SOCKET_ERROR)
+	if (sock == INVALID_SOCKET)
 		return -1;
 
 	while (n_ii < 1024)
@@ -675,7 +670,7 @@ pg_foreach_ifaddr(PgIfAddrCallback callback, void *cb_data)
 				total;
 
 	sock = socket(AF_INET, SOCK_DGRAM, 0);
-	if (sock == -1)
+	if (sock == PGINVALID_SOCKET)
 		return -1;
 
 	while (n_buffer < 1024 * 100)
@@ -716,7 +711,7 @@ pg_foreach_ifaddr(PgIfAddrCallback callback, void *cb_data)
 #ifdef HAVE_IPV6
 	/* We'll need an IPv6 socket too for the SIOCGLIFNETMASK ioctls */
 	sock6 = socket(AF_INET6, SOCK_DGRAM, 0);
-	if (sock6 == -1)
+	if (sock6 == PGINVALID_SOCKET)
 	{
 		free(buffer);
 		close(sock);
@@ -793,10 +788,10 @@ pg_foreach_ifaddr(PgIfAddrCallback callback, void *cb_data)
 	char	   *ptr,
 			   *buffer = NULL;
 	size_t		n_buffer = 1024;
-	int			sock;
+	pgsocket	sock;
 
 	sock = socket(AF_INET, SOCK_DGRAM, 0);
-	if (sock == -1)
+	if (sock == PGINVALID_SOCKET)
 		return -1;
 
 	while (n_buffer < 1024 * 100)

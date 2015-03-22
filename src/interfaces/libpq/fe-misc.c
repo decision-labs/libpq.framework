@@ -19,7 +19,7 @@
  * routines.
  *
  *
- * Portions Copyright (c) 1996-2013, PostgreSQL Global Development Group
+ * Portions Copyright (c) 1996-2014, PostgreSQL Global Development Group
  * Portions Copyright (c) 1994, Regents of the University of California
  *
  * IDENTIFICATION
@@ -351,6 +351,7 @@ pqCheckOutBufferSpace(size_t bytes_needed, PGconn *conn)
 	int			newsize = conn->outBufSize;
 	char	   *newbuf;
 
+	/* Quick exit if we have enough space */
 	if (bytes_needed <= (size_t) newsize)
 		return 0;
 
@@ -414,6 +415,37 @@ pqCheckInBufferSpace(size_t bytes_needed, PGconn *conn)
 	int			newsize = conn->inBufSize;
 	char	   *newbuf;
 
+	/* Quick exit if we have enough space */
+	if (bytes_needed <= (size_t) newsize)
+		return 0;
+
+	/*
+	 * Before concluding that we need to enlarge the buffer, left-justify
+	 * whatever is in it and recheck.  The caller's value of bytes_needed
+	 * includes any data to the left of inStart, but we can delete that in
+	 * preference to enlarging the buffer.  It's slightly ugly to have this
+	 * function do this, but it's better than making callers worry about it.
+	 */
+	bytes_needed -= conn->inStart;
+
+	if (conn->inStart < conn->inEnd)
+	{
+		if (conn->inStart > 0)
+		{
+			memmove(conn->inBuffer, conn->inBuffer + conn->inStart,
+					conn->inEnd - conn->inStart);
+			conn->inEnd -= conn->inStart;
+			conn->inCursor -= conn->inStart;
+			conn->inStart = 0;
+		}
+	}
+	else
+	{
+		/* buffer is logically empty, reset it */
+		conn->inStart = conn->inCursor = conn->inEnd = 0;
+	}
+
+	/* Recheck whether we have enough space */
 	if (bytes_needed <= (size_t) newsize)
 		return 0;
 
@@ -604,7 +636,7 @@ pqReadData(PGconn *conn)
 	int			someread = 0;
 	int			nread;
 
-	if (conn->sock < 0)
+	if (conn->sock == PGINVALID_SOCKET)
 	{
 		printfPQExpBuffer(&conn->errorMessage,
 						  libpq_gettext("connection not open\n"));
@@ -681,13 +713,13 @@ retry3:
 		/*
 		 * Hack to deal with the fact that some kernels will only give us back
 		 * 1 packet per recv() call, even if we asked for more and there is
-		 * more available.	If it looks like we are reading a long message,
+		 * more available.  If it looks like we are reading a long message,
 		 * loop back to recv() again immediately, until we run out of data or
 		 * buffer space.  Without this, the block-and-restart behavior of
 		 * libpq's higher levels leads to O(N^2) performance on long messages.
 		 *
 		 * Since we left-justified the data above, conn->inEnd gives the
-		 * amount of data already read in the current message.	We consider
+		 * amount of data already read in the current message.  We consider
 		 * the message "long" once we have acquired 32k ...
 		 */
 		if (conn->inEnd > 32768 &&
@@ -731,12 +763,8 @@ retry3:
 			/* ready for read */
 			break;
 		default:
-			printfPQExpBuffer(&conn->errorMessage,
-							  libpq_gettext(
-								"server closed the connection unexpectedly\n"
-				   "\tThis probably means the server terminated abnormally\n"
-							 "\tbefore or while processing the request.\n"));
-			goto definitelyFailed;
+			/* we override pqReadReady's message with something more useful */
+			goto definitelyEOF;
 	}
 
 	/*
@@ -775,9 +803,16 @@ retry4:
 
 	/*
 	 * OK, we are getting a zero read even though select() says ready. This
-	 * means the connection has been closed.  Cope.  Note that errorMessage
-	 * has been set already.
+	 * means the connection has been closed.  Cope.
 	 */
+definitelyEOF:
+	printfPQExpBuffer(&conn->errorMessage,
+					  libpq_gettext(
+								"server closed the connection unexpectedly\n"
+				   "\tThis probably means the server terminated abnormally\n"
+							 "\tbefore or while processing the request.\n"));
+
+	/* Come here if lower-level code already set a suitable errorMessage */
 definitelyFailed:
 	pqDropConnection(conn);
 	conn->status = CONNECTION_BAD;		/* No more connection to backend */
@@ -800,7 +835,7 @@ pqSendSome(PGconn *conn, int len)
 	int			remaining = conn->outCount;
 	int			result = 0;
 
-	if (conn->sock < 0)
+	if (conn->sock == PGINVALID_SOCKET)
 	{
 		printfPQExpBuffer(&conn->errorMessage,
 						  libpq_gettext("connection not open\n"));
@@ -1011,7 +1046,7 @@ pqSocketCheck(PGconn *conn, int forRead, int forWrite, time_t end_time)
 
 	if (!conn)
 		return -1;
-	if (conn->sock < 0)
+	if (conn->sock == PGINVALID_SOCKET)
 	{
 		printfPQExpBuffer(&conn->errorMessage,
 						  libpq_gettext("socket not open\n"));

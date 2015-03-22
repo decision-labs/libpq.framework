@@ -18,7 +18,7 @@
  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED.	IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
@@ -32,7 +32,9 @@
 
 #include "c.h"
 
+#include <ctype.h>
 #include <limits.h>
+#include <math.h>
 #ifndef WIN32
 #include <sys/ioctl.h>
 #endif
@@ -66,7 +68,7 @@
  * platforms.  This implementation is compatible with the Single Unix Spec:
  *
  * 1. -1 is returned only if processing is abandoned due to an invalid
- * parameter, such as incorrect format string.	(Although not required by
+ * parameter, such as incorrect format string.  (Although not required by
  * the spec, this happens only when no characters have yet been transmitted
  * to the destination.)
  *
@@ -87,7 +89,7 @@
  * Original:
  * Patrick Powell Tue Apr 11 09:48:21 PDT 1995
  * A bombproof version of doprnt (dopr) included.
- * Sigh.  This sort of thing is always nasty do deal with.	Note that
+ * Sigh.  This sort of thing is always nasty do deal with.  Note that
  * the version here does not include floating point. (now it does ... tgl)
  **************************************************************/
 
@@ -386,6 +388,19 @@ nextch1:
 				else
 					longflag = 1;
 				goto nextch1;
+			case 'z':
+#if SIZEOF_SIZE_T == 8
+#ifdef HAVE_LONG_INT_64
+				longflag = 1;
+#elif defined(HAVE_LONG_LONG_INT_64)
+				longlongflag = 1;
+#else
+#error "Don't know how to print 64bit integers"
+#endif
+#else
+				/* assume size_t is same size as int */
+#endif
+				goto nextch1;
 			case 'h':
 			case '\'':
 				/* ignore these */
@@ -618,6 +633,19 @@ nextch2:
 					longlongflag = 1;
 				else
 					longflag = 1;
+				goto nextch2;
+			case 'z':
+#if SIZEOF_SIZE_T == 8
+#ifdef HAVE_LONG_INT_64
+				longflag = 1;
+#elif defined(HAVE_LONG_LONG_INT_64)
+				longlongflag = 1;
+#else
+#error "Don't know how to print 64bit integers"
+#endif
+#else
+				/* assume size_t is same size as int */
+#endif
 				goto nextch2;
 			case 'h':
 			case '\'':
@@ -906,27 +934,80 @@ fmtfloat(double value, char type, int forcesign, int leftjust,
 		 PrintfTarget *target)
 {
 	int			signvalue = 0;
+	int			prec;
 	int			vallen;
 	char		fmt[32];
-	char		convert[512];
-	int			padlen = 0;		/* amount to pad */
+	char		convert[1024];
+	int			zeropadlen = 0; /* amount to pad with zeroes */
+	int			padlen = 0;		/* amount to pad with spaces */
 
-	/* we rely on regular C library's sprintf to do the basic conversion */
+	/*
+	 * We rely on the regular C library's sprintf to do the basic conversion,
+	 * then handle padding considerations here.
+	 *
+	 * The dynamic range of "double" is about 1E+-308 for IEEE math, and not
+	 * too wildly more than that with other hardware.  In "f" format, sprintf
+	 * could therefore generate at most 308 characters to the left of the
+	 * decimal point; while we need to allow the precision to get as high as
+	 * 308+17 to ensure that we don't truncate significant digits from very
+	 * small values.  To handle both these extremes, we use a buffer of 1024
+	 * bytes and limit requested precision to 350 digits; this should prevent
+	 * buffer overrun even with non-IEEE math.  If the original precision
+	 * request was more than 350, separately pad with zeroes.
+	 */
+	if (precision < 0)			/* cover possible overflow of "accum" */
+		precision = 0;
+	prec = Min(precision, 350);
+
 	if (pointflag)
-		sprintf(fmt, "%%.%d%c", precision, type);
+	{
+		sprintf(fmt, "%%.%d%c", prec, type);
+		zeropadlen = precision - prec;
+	}
 	else
 		sprintf(fmt, "%%%c", type);
 
-	if (adjust_sign((value < 0), forcesign, &signvalue))
+	if (!isnan(value) && adjust_sign((value < 0), forcesign, &signvalue))
 		value = -value;
 
 	vallen = sprintf(convert, fmt, value);
 
-	adjust_padlen(minlen, vallen, leftjust, &padlen);
+	/* If it's infinity or NaN, forget about doing any zero-padding */
+	if (zeropadlen > 0 && !isdigit((unsigned char) convert[vallen - 1]))
+		zeropadlen = 0;
+
+	adjust_padlen(minlen, vallen + zeropadlen, leftjust, &padlen);
 
 	leading_pad(zpad, &signvalue, &padlen, target);
 
-	dostr(convert, vallen, target);
+	if (zeropadlen > 0)
+	{
+		/* If 'e' or 'E' format, inject zeroes before the exponent */
+		char	   *epos = strrchr(convert, 'e');
+
+		if (!epos)
+			epos = strrchr(convert, 'E');
+		if (epos)
+		{
+			/* pad after exponent */
+			dostr(convert, epos - convert, target);
+			while (zeropadlen-- > 0)
+				dopr_outch('0', target);
+			dostr(epos, vallen - (epos - convert), target);
+		}
+		else
+		{
+			/* no exponent, pad after the digits */
+			dostr(convert, vallen, target);
+			while (zeropadlen-- > 0)
+				dopr_outch('0', target);
+		}
+	}
+	else
+	{
+		/* no zero padding, just emit the number as-is */
+		dostr(convert, vallen, target);
+	}
 
 	trailing_pad(&padlen, target);
 }
