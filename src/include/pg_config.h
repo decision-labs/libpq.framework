@@ -76,7 +76,7 @@
 #define FLOAT8PASSBYVAL false
 
 /* Define to 1 if getpwuid_r() takes a 5th argument. */
-#define GETPWUID_R_5ARG /**/
+#define GETPWUID_R_5ARG 1
 
 /* Define to 1 if gettimeofday() takes only 1 argument. */
 /* #undef GETTIMEOFDAY_1ARG */
@@ -253,28 +253,13 @@
 #define HAVE_INT_OPTRESET 1
 
 /* Define to 1 if you have the global variable 'int timezone'. */
-#define HAVE_INT_TIMEZONE /**/
+#define HAVE_INT_TIMEZONE 1
 
 /* Define to 1 if you have support for IPv6. */
 #define HAVE_IPV6 1
 
 /* Define to 1 if you have isinf(). */
 #define HAVE_ISINF 1
-
-/* Define to 1 if `e_data' is member of `krb5_error'. */
-/* #undef HAVE_KRB5_ERROR_E_DATA */
-
-/* Define to 1 if `text.data' is member of `krb5_error'. */
-/* #undef HAVE_KRB5_ERROR_TEXT_DATA */
-
-/* Define to 1 if you have krb5_free_unparsed_name. */
-/* #undef HAVE_KRB5_FREE_UNPARSED_NAME */
-
-/* Define to 1 if `client' is member of `krb5_ticket'. */
-/* #undef HAVE_KRB5_TICKET_CLIENT */
-
-/* Define to 1 if `enc_part2' is member of `krb5_ticket'. */
-/* #undef HAVE_KRB5_TICKET_ENC_PART2 */
 
 /* Define to 1 if you have the <langinfo.h> header file. */
 #define HAVE_LANGINFO_H 1
@@ -346,6 +331,9 @@
 /* Define to 1 if the system has the type `MINIDUMP_TYPE'. */
 /* #undef HAVE_MINIDUMP_TYPE */
 
+/* Define to 1 if you have the `mkdtemp' function. */
+#define HAVE_MKDTEMP 1
+
 /* Define to 1 if you have the <netinet/in.h> header file. */
 #define HAVE_NETINET_IN_H 1
 
@@ -371,7 +359,7 @@
 /* #undef HAVE_POSIX_FADVISE */
 
 /* Define to 1 if you have the POSIX signal interface. */
-#define HAVE_POSIX_SIGNALS /**/
+#define HAVE_POSIX_SIGNALS 1
 
 /* Define to 1 if the assembler supports PPC's LWARX mutex hint bit. */
 /* #undef HAVE_PPC_LWARX_MUTEX_HINT */
@@ -384,6 +372,9 @@
 
 /* Define if you have POSIX threads libraries and header files. */
 /* #undef HAVE_PTHREAD */
+
+/* Define to 1 if you have the `pthread_is_threaded_np' function. */
+#define HAVE_PTHREAD_IS_THREADED_NP 1
 
 /* Define to 1 if you have the <pwd.h> header file. */
 #define HAVE_PWD_H 1
@@ -425,6 +416,9 @@
 /* Define to 1 if you have the `setsid' function. */
 #define HAVE_SETSID 1
 
+/* Define to 1 if you have the `shm_open' function. */
+#define HAVE_SHM_OPEN 1
+
 /* Define to 1 if you have the `sigprocmask' function. */
 #define HAVE_SIGPROCMASK 1
 
@@ -443,6 +437,9 @@
 /* Define to 1 if you have the `srandom' function. */
 #define HAVE_SRANDOM 1
 
+/* Define to 1 if you have the `SSL_get_current_compression' function. */
+#define HAVE_SSL_GET_CURRENT_COMPRESSION 1
+
 /* Define to 1 if you have the <stdint.h> header file. */
 #define HAVE_STDINT_H 1
 
@@ -454,9 +451,6 @@
 
 /* Define to 1 if you have the `strerror_r' function. */
 #define HAVE_STRERROR_R 1
-
-/* Define to 1 if cpp supports the ANSI # stringizing operator. */
-#define HAVE_STRINGIZE 1
 
 /* Define to 1 if you have the <strings.h> header file. */
 #define HAVE_STRINGS_H 1
@@ -491,25 +485,25 @@
 /* Define to 1 if the system has the type `struct option'. */
 #define HAVE_STRUCT_OPTION 1
 
-/* Define to 1 if `sa_len' is member of `struct sockaddr'. */
+/* Define to 1 if `sa_len' is a member of `struct sockaddr'. */
 #define HAVE_STRUCT_SOCKADDR_SA_LEN 1
 
 /* Define to 1 if the system has the type `struct sockaddr_storage'. */
 #define HAVE_STRUCT_SOCKADDR_STORAGE 1
 
-/* Define to 1 if `ss_family' is member of `struct sockaddr_storage'. */
+/* Define to 1 if `ss_family' is a member of `struct sockaddr_storage'. */
 #define HAVE_STRUCT_SOCKADDR_STORAGE_SS_FAMILY 1
 
-/* Define to 1 if `ss_len' is member of `struct sockaddr_storage'. */
+/* Define to 1 if `ss_len' is a member of `struct sockaddr_storage'. */
 #define HAVE_STRUCT_SOCKADDR_STORAGE_SS_LEN 1
 
-/* Define to 1 if `__ss_family' is member of `struct sockaddr_storage'. */
+/* Define to 1 if `__ss_family' is a member of `struct sockaddr_storage'. */
 /* #undef HAVE_STRUCT_SOCKADDR_STORAGE___SS_FAMILY */
 
-/* Define to 1 if `__ss_len' is member of `struct sockaddr_storage'. */
+/* Define to 1 if `__ss_len' is a member of `struct sockaddr_storage'. */
 /* #undef HAVE_STRUCT_SOCKADDR_STORAGE___SS_LEN */
 
-/* Define to 1 if `tm_zone' is member of `struct tm'. */
+/* Define to 1 if `tm_zone' is a member of `struct tm'. */
 #define HAVE_STRUCT_TM_TM_ZONE 1
 
 /* Define to 1 if you have the `symlink' function. */
@@ -606,6 +600,9 @@
 /* Define to 1 if you have the `unsetenv' function. */
 #define HAVE_UNSETENV 1
 
+/* Define to 1 if the system has the type `unsigned long long int'. */
+#define HAVE_UNSIGNED_LONG_LONG_INT 1
+
 /* Define to 1 if you have the `utime' function. */
 #define HAVE_UTIME 1
 
@@ -615,8 +612,20 @@
 /* Define to 1 if you have the <utime.h> header file. */
 #define HAVE_UTIME_H 1
 
+/* Define to 1 if you have BSD UUID support. */
+/* #undef HAVE_UUID_BSD */
+
+/* Define to 1 if you have E2FS UUID support. */
+#define HAVE_UUID_E2FS 1
+
 /* Define to 1 if you have the <uuid.h> header file. */
 /* #undef HAVE_UUID_H */
+
+/* Define to 1 if you have OSSP UUID support. */
+/* #undef HAVE_UUID_OSSP */
+
+/* Define to 1 if you have the <uuid/uuid.h> header file. */
+#define HAVE_UUID_UUID_H 1
 
 /* Define to 1 if you have the `vsnprintf' function. */
 #define HAVE_VSNPRINTF 1
@@ -654,9 +663,6 @@
 /* Define to the appropriate snprintf format for 64-bit ints. */
 #define INT64_FORMAT "%lld"
 
-/* Define to build with Kerberos 5 support. (--with-krb5) */
-/* #undef KRB5 */
-
 /* Define to 1 if `locale_t' requires <xlocale.h>. */
 #define LOCALE_T_IN_XLOCALE 1
 
@@ -673,36 +679,39 @@
 #define PACKAGE_NAME "PostgreSQL"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "PostgreSQL 9.3.0"
+#define PACKAGE_STRING "PostgreSQL 9.4.1"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "postgresql"
 
+/* Define to the home page for this package. */
+#define PACKAGE_URL ""
+
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "9.3.0"
+#define PACKAGE_VERSION "9.4.1"
 
 /* Define to the name of a signed 64-bit integer type. */
 #define PG_INT64_TYPE long long int
 
-/* Define to the name of the default PostgreSQL service principal in Kerberos.
-   (--with-krb-srvnam=NAME) */
+/* Define to the name of the default PostgreSQL service principal in Kerberos
+   (GSSAPI). (--with-krb-srvnam=NAME) */
 #define PG_KRB_SRVNAM "postgres"
 
 /* PostgreSQL major version as a string */
-#define PG_MAJORVERSION "9.3"
+#define PG_MAJORVERSION "9.4"
 
 /* Define to 1 if "static inline" works without unwanted warnings from
    compilations where static inline functions are defined but not called. */
 #define PG_USE_INLINE 1
 
 /* PostgreSQL version as a string */
-#define PG_VERSION "9.3.0"
+#define PG_VERSION "9.4.1"
 
 /* PostgreSQL version as a number */
-#define PG_VERSION_NUM 90300
+#define PG_VERSION_NUM 90401
 
 /* A string containing the version number, platform, and C compiler */
-#define PG_VERSION_STR "PostgreSQL 9.3.0 on arm-apple-darwin9, compiled by Apple LLVM version 5.0 (clang-500.2.75) (based on LLVM 3.3svn), 32-bit"
+#define PG_VERSION_STR "PostgreSQL 9.4.1 on arm-apple-darwin, compiled by Apple LLVM version 6.1.0 (clang-602.0.45) (based on LLVM 3.6.0svn), 32-bit"
 
 /* Define to 1 to allow profiling output to be saved separately for each
    process. */
@@ -741,7 +750,7 @@
 #define STDC_HEADERS 1
 
 /* Define to 1 if strerror_r() returns a int. */
-#define STRERROR_R_INT /**/
+#define STRERROR_R_INT 1
 
 /* Define to 1 if your <sys/time.h> declares `struct tm'. */
 /* #undef TM_IN_SYS_TIME */
@@ -828,6 +837,8 @@
    XLOG_BLCKSZ). Changing XLOG_SEG_SIZE requires an initdb. */
 #define XLOG_SEG_SIZE (16 * 1024 * 1024)
 
+
+
 /* Number of bits in a file offset, on hosts where this is settable. */
 /* #undef _FILE_OFFSET_BITS */
 
@@ -836,9 +847,6 @@
 
 /* Define for large files, on AIX-style hosts. */
 /* #undef _LARGE_FILES */
-
-/* Define to empty if `const' does not conform to ANSI C. */
-/* #undef const */
 
 /* Define to `__inline__' or `__inline' if that's what the C compiler
    calls it, or to nothing if 'inline' is not supported under any name.  */
@@ -856,7 +864,3 @@
 /* Define to the type of an unsigned integer type wide enough to hold a
    pointer, if such a type exists, and if the system does not define it. */
 /* #undef uintptr_t */
-
-/* Define to empty if the keyword `volatile' does not work. Warning: valid
-   code using `volatile' can become incorrect without. Disable with care. */
-/* #undef volatile */
