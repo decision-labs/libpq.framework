@@ -1,5 +1,5 @@
-#libpq.framework for iOS 6.1
-**An XCode project to compile your own libpq.framework for iOS 6.1**
+#libpq.framework for iOS 8.x
+**An XCode project to compile your own libpq.framework for iOS 8.x**
 
 [libpq](http://www.postgresql.org/docs/current/interactive/libpq.html) is a set of library functions that allow client programs to pass queries to the [PostgreSQL](http://www.postgresql.org/) backend database server and to receive the results of these sql queries.
 
@@ -9,7 +9,7 @@ This repository allows you to easily create a `libpq.framework` to use in your i
 
 `libpq.framework` has no external dependencies apart from `libssl.a` and `libcrypto.a` from OpenSSL, which we download and compile by using the `build-libssl.sh` script so that you can be sure you are downloading it from the official OpenSSL repository. So getting started is easy:
 
-* Install [Git](http://git-scm.com/) and the latest Xcode with the iOS 6.1 SDK.
+* Install [Git](http://git-scm.com/) and the latest Xcode with the iOS 8.x SDK.
 
 * Make sure that `xcode-select` points to the correct location by running:
 
