@@ -21,8 +21,8 @@
 ###########################################################################
 #  Change values here													  #
 #
-VERSION="1.0.1g"													      #
-SDKVERSION="7.1"														  #
+VERSION="1.0.2a"													      #
+SDKVERSION=`xcrun -sdk iphoneos --show-sdk-version`														  #
 #																		  #
 ###########################################################################
 #																		  #
@@ -61,7 +61,7 @@ esac
 set -e
 if [ ! -e openssl-${VERSION}.tar.gz ]; then
 	echo "Downloading openssl-${VERSION}.tar.gz"
-    curl -O http://www.openssl.org/source/openssl-${VERSION}.tar.gz
+    curl -O https://www.openssl.org/source/openssl-${VERSION}.tar.gz
 else
 	echo "Using openssl-${VERSION}.tar.gz"
 fi
@@ -113,7 +113,12 @@ do
 	# add -isysroot to CC=
 	sed -ie "s!^CFLAG=!CFLAG=-isysroot ${CROSS_TOP}/SDKs/${CROSS_SDK} -miphoneos-version-min=7.0 !" "Makefile"
 
-	make >> "${LOG}" 2>&1
+	if [ "$1" == "verbose" ];
+	then
+		make
+	else
+		make >> "${LOG}" 2>&1
+	fi
 
 	if [ $? != 0 ];
     then
