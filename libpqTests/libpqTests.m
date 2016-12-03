@@ -2,34 +2,36 @@
 //  libpqTests.m
 //  libpqTests
 //
-//  Created by Kashif Rasul on 04.03.12.
-//  Copyright (c) 2012 SpacialDB. All rights reserved.
+//  Created by Kashif Rasul on 03/12/2016.
+//
 //
 
-#import "libpqTests.h"
+#import <XCTest/XCTest.h>
+#import "libpq-fe.h"
+
+@interface libpqTests : XCTestCase {
+@private
+    NSString *conninfo;
+    PGconn *conn;
+}
+@end
 
 @implementation libpqTests
 
-- (void)setUp
-{
+- (void)setUp {
     [super setUp];
-    
-    NSLog(@"%@ start", self.name);
     conninfo = [NSString stringWithFormat:@"user='%@' dbname='%@'", @"kashif", @"postgres"];
     conn = PQconnectdb([conninfo UTF8String]);
 }
 
-- (void)tearDown
-{
-    NSLog(@"%@ stop", self.name);
+- (void)tearDown {
     PQfinish(conn);
-    
     [super tearDown];
 }
 
-- (void)testConnectionOK
-{
+- (void)testConnectionOK {
     NSLog(@"%@ start", self.name);
+    
     if (PQstatus(conn) != CONNECTION_OK) {
         NSString *message = [[NSString alloc] initWithUTF8String:PQerrorMessage(conn)];
         XCTFail(@"Connection to database failed: %@", message);
@@ -97,4 +99,5 @@
     res = PQexec(conn, "END");
     PQclear(res);
 }
+
 @end

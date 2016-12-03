@@ -22,11 +22,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		4B471B4E1ABF1CD500DA4F33 /* pg_config_64.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B471B4D1ABF1CD500DA4F33 /* pg_config_64.h */; };
 		4B4C4CB515040B7500840750 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B4C4CB415040B7500840750 /* Foundation.framework */; };
-		4B4C4CC615040B7500840750 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B4C4CB415040B7500840750 /* Foundation.framework */; };
-		4B4C4CCF15040B7500840750 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4B4C4CCD15040B7500840750 /* InfoPlist.strings */; };
-		4B4C4CD215040B7500840750 /* libpqTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B4C4CD115040B7500840750 /* libpqTests.m */; };
 		4B4C4E0C1504295600840750 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B4C4E0A1504295600840750 /* libcrypto.a */; };
 		4B4C4E0D1504295600840750 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B4C4E0B1504295600840750 /* libssl.a */; };
 		4B5894F117EF99B90039A02A /* pg_config_ext.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B5894F017EF99B90039A02A /* pg_config_ext.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -138,7 +134,9 @@
 		4BC3EA0215058F8D00D47056 /* x509.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BC3E9B715058F8D00D47056 /* x509.h */; };
 		4BC3EA0315058F8D00D47056 /* x509_vfy.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BC3E9B815058F8D00D47056 /* x509_vfy.h */; };
 		4BC3EA0415058F8D00D47056 /* x509v3.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BC3E9B915058F8D00D47056 /* x509v3.h */; };
-		4BD56592154E01CF009E5F60 /* libpq.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B4C4CB115040B7500840750 /* libpq.a */; };
+		4BE7E2EB1DF2E6EC00715BB6 /* fe-secure-openssl.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BE7E2EA1DF2E6EC00715BB6 /* fe-secure-openssl.c */; };
+		4BE7E3131DF363C400715BB6 /* libpqTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BE7E3121DF363C400715BB6 /* libpqTests.m */; };
+		4BE7E3151DF363C400715BB6 /* libpq.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B4C4CB115040B7500840750 /* libpq.a */; };
 		4BE930F515057FE60021F063 /* c.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BE930C515057FE60021F063 /* c.h */; };
 		4BE930F615057FE60021F063 /* getaddrinfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BE930C615057FE60021F063 /* getaddrinfo.h */; };
 		4BE930F815057FE60021F063 /* libpq-fs.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BE930C915057FE60021F063 /* libpq-fs.h */; };
@@ -155,14 +153,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		4B4C4CC715040B7500840750 /* PBXContainerItemProxy */ = {
+		4B4C4CE2150423FC00840750 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 4B4C4CA815040B7500840750 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 4B4C4CB015040B7500840750;
 			remoteInfo = libpq;
 		};
-		4B4C4CE2150423FC00840750 /* PBXContainerItemProxy */ = {
+		4BE7E3161DF363C400715BB6 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 4B4C4CA815040B7500840750 /* Project object */;
 			proxyType = 1;
@@ -172,14 +170,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		4B471B4D1ABF1CD500DA4F33 /* pg_config_64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pg_config_64.h; sourceTree = "<group>"; };
 		4B4C4CB115040B7500840750 /* libpq.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpq.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B4C4CB415040B7500840750 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		4B4C4CC115040B7500840750 /* libpqTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = libpqTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		4B4C4CCC15040B7500840750 /* libpqTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "libpqTests-Info.plist"; sourceTree = "<group>"; };
-		4B4C4CCE15040B7500840750 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		4B4C4CD015040B7500840750 /* libpqTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = libpqTests.h; sourceTree = "<group>"; };
-		4B4C4CD115040B7500840750 /* libpqTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = libpqTests.m; sourceTree = "<group>"; };
 		4B4C4E0A1504295600840750 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = lib/libcrypto.a; sourceTree = "<group>"; };
 		4B4C4E0B1504295600840750 /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssl.a; path = lib/libssl.a; sourceTree = "<group>"; };
 		4B5894F017EF99B90039A02A /* pg_config_ext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pg_config_ext.h; sourceTree = "<group>"; };
@@ -292,6 +284,10 @@
 		4BC3E9B815058F8D00D47056 /* x509_vfy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = x509_vfy.h; sourceTree = "<group>"; };
 		4BC3E9B915058F8D00D47056 /* x509v3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = x509v3.h; sourceTree = "<group>"; };
 		4BD56590154E0111009E5F60 /* libpq.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = libpq.framework; sourceTree = "<group>"; };
+		4BE7E2EA1DF2E6EC00715BB6 /* fe-secure-openssl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "fe-secure-openssl.c"; sourceTree = "<group>"; };
+		4BE7E3101DF363C400715BB6 /* libpqTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = libpqTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4BE7E3121DF363C400715BB6 /* libpqTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = libpqTests.m; sourceTree = "<group>"; };
+		4BE7E3141DF363C400715BB6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4BE930C515057FE60021F063 /* c.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = c.h; sourceTree = "<group>"; };
 		4BE930C615057FE60021F063 /* getaddrinfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = getaddrinfo.h; sourceTree = "<group>"; };
 		4BE930C915057FE60021F063 /* libpq-fs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "libpq-fs.h"; sourceTree = "<group>"; };
@@ -318,12 +314,11 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4B4C4CBD15040B7500840750 /* Frameworks */ = {
+		4BE7E30D1DF363C400715BB6 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4BD56592154E01CF009E5F60 /* libpq.a in Frameworks */,
-				4B4C4CC615040B7500840750 /* Foundation.framework in Frameworks */,
+				4BE7E3151DF363C400715BB6 /* libpq.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -334,7 +329,7 @@
 			isa = PBXGroup;
 			children = (
 				4BE930C315057FE60021F063 /* src */,
-				4B4C4CCA15040B7500840750 /* libpqTests */,
+				4BE7E3111DF363C400715BB6 /* libpqTests */,
 				4B4C4CB315040B7500840750 /* Frameworks */,
 				4B4C4CB215040B7500840750 /* Products */,
 			);
@@ -344,7 +339,7 @@
 			isa = PBXGroup;
 			children = (
 				4B4C4CB115040B7500840750 /* libpq.a */,
-				4B4C4CC115040B7500840750 /* libpqTests.xctest */,
+				4BE7E3101DF363C400715BB6 /* libpqTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -358,25 +353,6 @@
 				4B4C4CB415040B7500840750 /* Foundation.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		4B4C4CCA15040B7500840750 /* libpqTests */ = {
-			isa = PBXGroup;
-			children = (
-				4B4C4CD015040B7500840750 /* libpqTests.h */,
-				4B4C4CD115040B7500840750 /* libpqTests.m */,
-				4B4C4CCB15040B7500840750 /* Supporting Files */,
-			);
-			path = libpqTests;
-			sourceTree = "<group>";
-		};
-		4B4C4CCB15040B7500840750 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				4B4C4CCC15040B7500840750 /* libpqTests-Info.plist */,
-				4B4C4CCD15040B7500840750 /* InfoPlist.strings */,
-			);
-			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 		4BB6232217EF963300920783 /* common */ = {
@@ -495,6 +471,15 @@
 			path = include/openssl;
 			sourceTree = SOURCE_ROOT;
 		};
+		4BE7E3111DF363C400715BB6 /* libpqTests */ = {
+			isa = PBXGroup;
+			children = (
+				4BE7E3121DF363C400715BB6 /* libpqTests.m */,
+				4BE7E3141DF363C400715BB6 /* Info.plist */,
+			);
+			path = libpqTests;
+			sourceTree = "<group>";
+		};
 		4BE930C315057FE60021F063 /* src */ = {
 			isa = PBXGroup;
 			children = (
@@ -519,7 +504,6 @@
 				4BE930C715057FE60021F063 /* libpq */,
 				4BE930CC15057FE60021F063 /* mb */,
 				4BE930CE15057FE60021F063 /* pg_config.h */,
-				4B471B4D1ABF1CD500DA4F33 /* pg_config_64.h */,
 				4BE930CF15057FE60021F063 /* pg_config_manual.h */,
 				4BE930D015057FE60021F063 /* pg_config_os.h */,
 				4BE930D115057FE60021F063 /* port.h */,
@@ -560,6 +544,7 @@
 		4BE930D515057FE60021F063 /* libpq */ = {
 			isa = PBXGroup;
 			children = (
+				4BE7E2EA1DF2E6EC00715BB6 /* fe-secure-openssl.c */,
 				4BBB04D316A91EE500CEE2AE /* chklocale.c */,
 				4BBB04D416A91EE500CEE2AE /* encnames.c */,
 				4BBB04D516A91EE500CEE2AE /* fe-auth.c */,
@@ -699,7 +684,6 @@
 				4BC3EA0115058F8D00D47056 /* whrlpool.h in Headers */,
 				4BC3EA0215058F8D00D47056 /* x509.h in Headers */,
 				4BC3EA0315058F8D00D47056 /* x509_vfy.h in Headers */,
-				4B471B4E1ABF1CD500DA4F33 /* pg_config_64.h in Headers */,
 				4BC3EA0415058F8D00D47056 /* x509v3.h in Headers */,
 				4BBB04D116A91EAE00CEE2AE /* pqsignal.h in Headers */,
 				4BBB04F216A91EE500CEE2AE /* fe-auth.h in Headers */,
@@ -730,23 +714,22 @@
 			productReference = 4B4C4CB115040B7500840750 /* libpq.a */;
 			productType = "com.apple.product-type.library.static";
 		};
-		4B4C4CC015040B7500840750 /* libpqTests */ = {
+		4BE7E30F1DF363C400715BB6 /* libpqTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4B4C4CD815040B7500840750 /* Build configuration list for PBXNativeTarget "libpqTests" */;
+			buildConfigurationList = 4BE7E3181DF363C400715BB6 /* Build configuration list for PBXNativeTarget "libpqTests" */;
 			buildPhases = (
-				4B4C4CBC15040B7500840750 /* Sources */,
-				4B4C4CBD15040B7500840750 /* Frameworks */,
-				4B4C4CBE15040B7500840750 /* Resources */,
-				4B4C4CBF15040B7500840750 /* ShellScript */,
+				4BE7E30C1DF363C400715BB6 /* Sources */,
+				4BE7E30D1DF363C400715BB6 /* Frameworks */,
+				4BE7E30E1DF363C400715BB6 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				4B4C4CC815040B7500840750 /* PBXTargetDependency */,
+				4BE7E3171DF363C400715BB6 /* PBXTargetDependency */,
 			);
 			name = libpqTests;
 			productName = libpqTests;
-			productReference = 4B4C4CC115040B7500840750 /* libpqTests.xctest */;
+			productReference = 4BE7E3101DF363C400715BB6 /* libpqTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -755,8 +738,15 @@
 		4B4C4CA815040B7500840750 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 0810;
 				LastTestingUpgradeCheck = 0510;
-				LastUpgradeCheck = 0630;
+				LastUpgradeCheck = 0810;
+				TargetAttributes = {
+					4BE7E30F1DF363C400715BB6 = {
+						CreatedOnToolsVersion = 8.1;
+						ProvisioningStyle = Automatic;
+					};
+				};
 			};
 			buildConfigurationList = 4B4C4CAB15040B7500840750 /* Build configuration list for PBXProject "libpq" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -771,37 +761,23 @@
 			projectRoot = "";
 			targets = (
 				4B4C4CB015040B7500840750 /* libpq */,
-				4B4C4CC015040B7500840750 /* libpqTests */,
 				4B4C4CDE150423F100840750 /* Framework */,
+				4BE7E30F1DF363C400715BB6 /* libpqTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		4B4C4CBE15040B7500840750 /* Resources */ = {
+		4BE7E30E1DF363C400715BB6 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4B4C4CCF15040B7500840750 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		4B4C4CBF15040B7500840750 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
-		};
 		4B4C4CDD150423AA00840750 /* Prepare Framework */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -849,6 +825,7 @@
 				4BBB04F916A91EE500CEE2AE /* fe-protocol3.c in Sources */,
 				4BBB04FA16A91EE500CEE2AE /* fe-secure.c in Sources */,
 				4BB6232417EF963300920783 /* fe_memutils.c in Sources */,
+				4BE7E2EB1DF2E6EC00715BB6 /* fe-secure-openssl.c in Sources */,
 				4BBB04FB16A91EE500CEE2AE /* inet_net_ntop.c in Sources */,
 				4BBB04FC16A91EE500CEE2AE /* ip.c in Sources */,
 				4BBB04FD16A91EE500CEE2AE /* libpq-events.c in Sources */,
@@ -863,39 +840,28 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4B4C4CBC15040B7500840750 /* Sources */ = {
+		4BE7E30C1DF363C400715BB6 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4B4C4CD215040B7500840750 /* libpqTests.m in Sources */,
+				4BE7E3131DF363C400715BB6 /* libpqTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		4B4C4CC815040B7500840750 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 4B4C4CB015040B7500840750 /* libpq */;
-			targetProxy = 4B4C4CC715040B7500840750 /* PBXContainerItemProxy */;
-		};
 		4B4C4CE3150423FC00840750 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 4B4C4CB015040B7500840750 /* libpq */;
 			targetProxy = 4B4C4CE2150423FC00840750 /* PBXContainerItemProxy */;
 		};
-/* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		4B4C4CCD15040B7500840750 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				4B4C4CCE15040B7500840750 /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
+		4BE7E3171DF363C400715BB6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4B4C4CB015040B7500840750 /* libpq */;
+			targetProxy = 4BE7E3161DF363C400715BB6 /* PBXContainerItemProxy */;
 		};
-/* End PBXVariantGroup section */
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		4B4C4CD315040B7500840750 /* Debug */ = {
@@ -906,11 +872,14 @@
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -952,7 +921,9 @@
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = YES;
@@ -1026,36 +997,6 @@
 			};
 			name = Release;
 		};
-		4B4C4CD915040B7500840750 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(SRCROOT)",
-					"$(inherited)",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "src/libpq-Prefix.pch";
-				INFOPLIST_FILE = "libpqTests/libpqTests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		4B4C4CDA15040B7500840750 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(SRCROOT)",
-					"$(inherited)",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "src/libpq-Prefix.pch";
-				INFOPLIST_FILE = "libpqTests/libpqTests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
 		4B4C4CE0150423F100840750 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1066,6 +1007,58 @@
 		4B4C4CE1150423F100840750 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		4BE7E3191DF363C400715BB6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = libpqTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.spacialdb.libpqTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		4BE7E31A1DF363C400715BB6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = libpqTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = com.spacialdb.libpqTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -1091,15 +1084,6 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4B4C4CD815040B7500840750 /* Build configuration list for PBXNativeTarget "libpqTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				4B4C4CD915040B7500840750 /* Debug */,
-				4B4C4CDA15040B7500840750 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		4B4C4CDF150423F100840750 /* Build configuration list for PBXAggregateTarget "Framework" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -1108,6 +1092,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		4BE7E3181DF363C400715BB6 /* Build configuration list for PBXNativeTarget "libpqTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4BE7E3191DF363C400715BB6 /* Debug */,
+				4BE7E31A1DF363C400715BB6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};
