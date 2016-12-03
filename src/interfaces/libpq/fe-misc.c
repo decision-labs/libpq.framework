@@ -19,7 +19,7 @@
  * routines.
  *
  *
- * Portions Copyright (c) 1996-2014, PostgreSQL Global Development Group
+ * Portions Copyright (c) 1996-2016, PostgreSQL Global Development Group
  * Portions Copyright (c) 1994, Regents of the University of California
  *
  * IDENTIFICATION
@@ -744,13 +744,14 @@ retry3:
 	 * the file selected for reading already.
 	 *
 	 * In SSL mode it's even worse: SSL_read() could say WANT_READ and then
-	 * data could arrive before we make the pqReadReady() test.  So we must
-	 * play dumb and assume there is more data, relying on the SSL layer to
-	 * detect true EOF.
+	 * data could arrive before we make the pqReadReady() test, but the second
+	 * SSL_read() could still say WANT_READ because the data received was not
+	 * a complete SSL record.  So we must play dumb and assume there is more
+	 * data, relying on the SSL layer to detect true EOF.
 	 */
 
 #ifdef USE_SSL
-	if (conn->ssl)
+	if (conn->ssl_in_use)
 		return 0;
 #endif
 
@@ -814,7 +815,8 @@ definitelyEOF:
 
 	/* Come here if lower-level code already set a suitable errorMessage */
 definitelyFailed:
-	pqDropConnection(conn);
+	/* Do *not* drop any already-read data; caller still wants it */
+	pqDropConnection(conn, false);
 	conn->status = CONNECTION_BAD;		/* No more connection to backend */
 	return -1;
 }
@@ -904,16 +906,6 @@ pqSendSome(PGconn *conn, int len)
 			/*
 			 * We didn't send it all, wait till we can send more.
 			 *
-			 * If the connection is in non-blocking mode we don't wait, but
-			 * return 1 to indicate that data is still pending.
-			 */
-			if (pqIsnonblocking(conn))
-			{
-				result = 1;
-				break;
-			}
-
-			/*
 			 * There are scenarios in which we can't send data because the
 			 * communications channel is full, but we cannot expect the server
 			 * to clear the channel eventually because it's blocked trying to
@@ -924,12 +916,29 @@ pqSendSome(PGconn *conn, int len)
 			 * again.  Furthermore, it is possible that such incoming data
 			 * might not arrive until after we've gone to sleep.  Therefore,
 			 * we wait for either read ready or write ready.
+			 *
+			 * In non-blocking mode, we don't wait here directly, but return 1
+			 * to indicate that data is still pending.  The caller should wait
+			 * for both read and write ready conditions, and call
+			 * PQconsumeInput() on read ready, but just in case it doesn't, we
+			 * call pqReadData() ourselves before returning.  That's not
+			 * enough if the data has not arrived yet, but it's the best we
+			 * can do, and works pretty well in practice.  (The documentation
+			 * used to say that you only need to wait for write-ready, so
+			 * there are still plenty of applications like that out there.)
 			 */
 			if (pqReadData(conn) < 0)
 			{
 				result = -1;	/* error message already set up */
 				break;
 			}
+
+			if (pqIsnonblocking(conn))
+			{
+				result = 1;
+				break;
+			}
+
 			if (pqWait(TRUE, TRUE, conn))
 			{
 				result = -1;
@@ -1049,13 +1058,13 @@ pqSocketCheck(PGconn *conn, int forRead, int forWrite, time_t end_time)
 	if (conn->sock == PGINVALID_SOCKET)
 	{
 		printfPQExpBuffer(&conn->errorMessage,
-						  libpq_gettext("socket not open\n"));
+						  libpq_gettext("invalid socket\n"));
 		return -1;
 	}
 
 #ifdef USE_SSL
 	/* Check for SSL library buffering read bytes */
-	if (forRead && conn->ssl && SSL_pending(conn->ssl) > 0)
+	if (forRead && conn->ssl_in_use && pgtls_read_pending(conn) > 0)
 	{
 		/* short-circuit the select */
 		return 1;
@@ -1171,7 +1180,7 @@ pqSocketPoll(int sock, int forRead, int forWrite, time_t end_time)
  */
 
 /*
- * returns the byte length of the word beginning s, using the
+ * returns the byte length of the character beginning at s, using the
  * specified encoding.
  */
 int
@@ -1181,7 +1190,7 @@ PQmblen(const char *s, int encoding)
 }
 
 /*
- * returns the display length of the word beginning s, using the
+ * returns the display length of the character beginning at s, using the
  * specified encoding.
  */
 int
@@ -1212,14 +1221,14 @@ PQenv2encoding(void)
 
 #ifdef ENABLE_NLS
 
-char *
-libpq_gettext(const char *msgid)
+static void
+libpq_binddomain()
 {
 	static bool already_bound = false;
 
 	if (!already_bound)
 	{
-		/* dgettext() preserves errno, but bindtextdomain() doesn't */
+		/* bindtextdomain() does not preserve errno */
 #ifdef WIN32
 		int			save_errno = GetLastError();
 #else
@@ -1239,8 +1248,20 @@ libpq_gettext(const char *msgid)
 		errno = save_errno;
 #endif
 	}
+}
 
+char *
+libpq_gettext(const char *msgid)
+{
+	libpq_binddomain();
 	return dgettext(PG_TEXTDOMAIN("libpq"), msgid);
+}
+
+char *
+libpq_ngettext(const char *msgid, const char *msgid_plural, unsigned long n)
+{
+	libpq_binddomain();
+	return dngettext(PG_TEXTDOMAIN("libpq"), msgid, msgid_plural, n);
 }
 
 #endif   /* ENABLE_NLS */

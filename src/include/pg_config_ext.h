@@ -5,8 +5,4 @@
  */
 
 /* Define to the name of a signed 64-bit integer type. */
-#if __LP64__
 #define PG_INT64_TYPE long int
-#else
-#define PG_INT64_TYPE long long int
-#endif

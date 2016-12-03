@@ -3,7 +3,7 @@
  * fe-exec.c
  *	  functions related to sending a query down to the backend
  *
- * Portions Copyright (c) 1996-2014, PostgreSQL Global Development Group
+ * Portions Copyright (c) 1996-2016, PostgreSQL Global Development Group
  * Portions Copyright (c) 1994, Regents of the University of California
  *
  *
@@ -159,6 +159,7 @@ PQmakeEmptyPGresult(PGconn *conn, ExecStatusType status)
 	result->nEvents = 0;
 	result->errMsg = NULL;
 	result->errFields = NULL;
+	result->errQuery = NULL;
 	result->null_field[0] = '\0';
 	result->curBlock = NULL;
 	result->curOffset = 0;
@@ -823,6 +824,7 @@ pqInternalNotice(const PGNoticeHooks *hooks, const char *fmt,...)
 	 */
 	pqSaveMessageField(res, PG_DIAG_MESSAGE_PRIMARY, msgBuf);
 	pqSaveMessageField(res, PG_DIAG_SEVERITY, libpq_gettext("NOTICE"));
+	pqSaveMessageField(res, PG_DIAG_SEVERITY_NONLOCALIZED, "NOTICE");
 	/* XXX should provide a SQLSTATE too? */
 
 	/*
@@ -892,7 +894,8 @@ pqSaveMessageField(PGresult *res, char code, const char *value)
 
 	pfield = (PGMessageField *)
 		pqResultAlloc(res,
-					  sizeof(PGMessageField) + strlen(value),
+					  offsetof(PGMessageField, contents) +
+					  strlen(value) + 1,
 					  TRUE);
 	if (!pfield)
 		return;					/* out of memory? */
@@ -981,14 +984,31 @@ pqSaveParameterStatus(PGconn *conn, const char *name, const char *value)
 
 		cnt = sscanf(value, "%d.%d.%d", &vmaj, &vmin, &vrev);
 
-		if (cnt < 2)
-			conn->sversion = 0; /* unknown */
-		else
+		if (cnt == 3)
 		{
-			if (cnt == 2)
-				vrev = 0;
+			/* old style, e.g. 9.6.1 */
 			conn->sversion = (100 * vmaj + vmin) * 100 + vrev;
 		}
+		else if (cnt == 2)
+		{
+			if (vmaj >= 10)
+			{
+				/* new style, e.g. 10.1 */
+				conn->sversion = 100 * 100 * vmaj + vmin;
+			}
+			else
+			{
+				/* old style without minor version, e.g. 9.6devel */
+				conn->sversion = (100 * vmaj + vmin) * 100;
+			}
+		}
+		else if (cnt == 1)
+		{
+			/* new style without minor version, e.g. 10devel */
+			conn->sversion = 100 * 100 * vmaj;
+		}
+		else
+			conn->sversion = 0; /* unknown */
 	}
 }
 
@@ -1366,8 +1386,7 @@ PQsendQueryStart(PGconn *conn)
 	}
 
 	/* initialize async result-accumulation state */
-	conn->result = NULL;
-	conn->next_result = NULL;
+	pqClearAsyncResult(conn);
 
 	/* reset single-row processing mode */
 	conn->singleRowMode = false;
@@ -1552,8 +1571,10 @@ sendFailed:
 /*
  * pqHandleSendFailure: try to clean up after failure to send command.
  *
- * Primarily, what we want to accomplish here is to process an async
- * NOTICE message that the backend might have sent just before it died.
+ * Primarily, what we want to accomplish here is to process any ERROR or
+ * NOTICE messages that the backend might have sent just before it died.
+ * Since we're in IDLE state, all such messages will get sent to the notice
+ * processor.
  *
  * NOTE: this routine should only be called in PGASYNC_IDLE state.
  */
@@ -1561,16 +1582,17 @@ void
 pqHandleSendFailure(PGconn *conn)
 {
 	/*
-	 * Accept any available input data, ignoring errors.  Note that if
-	 * pqReadData decides the backend has closed the channel, it will close
-	 * our side of the socket --- that's just what we want here.
+	 * Accept and parse any available input data, ignoring I/O errors.  Note
+	 * that if pqReadData decides the backend has closed the channel, it will
+	 * close our side of the socket --- that's just what we want here.
 	 */
 	while (pqReadData(conn) > 0)
-		 /* loop until no more data readable */ ;
+		parseInput(conn);
 
 	/*
-	 * Parse any available input messages.  Since we are in PGASYNC_IDLE
-	 * state, only NOTICE and NOTIFY messages will be eaten.
+	 * Be sure to parse available input messages even if we read no data.
+	 * (Note: calling parseInput within the above loop isn't really necessary,
+	 * but it prevents buffer bloat if there's a lot of data available.)
 	 */
 	parseInput(conn);
 }
@@ -2513,20 +2535,18 @@ PQendcopy(PGconn *conn)
  *		PQfn -	Send a function call to the POSTGRES backend.
  *
  *		conn			: backend connection
- *		fnid			: function id
- *		result_buf		: pointer to result buffer (&int if integer)
- *		result_len		: length of return value.
- *		actual_result_len: actual length returned. (differs from result_len
- *						  for varlena structures.)
- *		result_type		: If the result is an integer, this must be 1,
+ *		fnid			: OID of function to be called
+ *		result_buf		: pointer to result buffer
+ *		result_len		: actual length of result is returned here
+ *		result_is_int	: If the result is an integer, this must be 1,
  *						  otherwise this should be 0
- *		args			: pointer to an array of function arguments.
+ *		args			: pointer to an array of function arguments
  *						  (each has length, if integer, and value/pointer)
  *		nargs			: # of arguments in args array.
  *
  * RETURNS
  *		PGresult with status = PGRES_COMMAND_OK if successful.
- *			*actual_result_len is > 0 if there is a return value, 0 if not.
+ *			*result_len is > 0 if there is a return value, 0 if not.
  *		PGresult with status = PGRES_FATAL_ERROR if backend returns an error.
  *		NULL on communications failure.  conn->errorMessage will be set.
  * ----------------
@@ -2536,12 +2556,12 @@ PGresult *
 PQfn(PGconn *conn,
 	 int fnid,
 	 int *result_buf,
-	 int *actual_result_len,
+	 int *result_len,
 	 int result_is_int,
 	 const PQArgBlock *args,
 	 int nargs)
 {
-	*actual_result_len = 0;
+	*result_len = 0;
 
 	if (!conn)
 		return NULL;
@@ -2559,12 +2579,12 @@ PQfn(PGconn *conn,
 
 	if (PG_PROTOCOL_MAJOR(conn->pversion) >= 3)
 		return pqFunctionCall3(conn, fnid,
-							   result_buf, actual_result_len,
+							   result_buf, result_len,
 							   result_is_int,
 							   args, nargs);
 	else
 		return pqFunctionCall2(conn, fnid,
-							   result_buf, actual_result_len,
+							   result_buf, result_len,
 							   result_is_int,
 							   args, nargs);
 }
@@ -2594,6 +2614,44 @@ PQresultErrorMessage(const PGresult *res)
 	if (!res || !res->errMsg)
 		return "";
 	return res->errMsg;
+}
+
+char *
+PQresultVerboseErrorMessage(const PGresult *res,
+							PGVerbosity verbosity,
+							PGContextVisibility show_context)
+{
+	PQExpBufferData workBuf;
+
+	/*
+	 * Because the caller is expected to free the result string, we must
+	 * strdup any constant result.  We use plain strdup and document that
+	 * callers should expect NULL if out-of-memory.
+	 */
+	if (!res ||
+		(res->resultStatus != PGRES_FATAL_ERROR &&
+		 res->resultStatus != PGRES_NONFATAL_ERROR))
+		return strdup(libpq_gettext("PGresult is not an error result\n"));
+
+	initPQExpBuffer(&workBuf);
+
+	/*
+	 * Currently, we pass this off to fe-protocol3.c in all cases; it will
+	 * behave reasonably sanely with an error reported by fe-protocol2.c as
+	 * well.  If necessary, we could record the protocol version in PGresults
+	 * so as to be able to invoke a version-specific message formatter, but
+	 * for now there's no need.
+	 */
+	pqBuildErrorMessage3(&workBuf, res, verbosity, show_context);
+
+	/* If insufficient memory to format the message, fail cleanly */
+	if (PQExpBufferDataBroken(workBuf))
+	{
+		termPQExpBuffer(&workBuf);
+		return strdup(libpq_gettext("out of memory\n"));
+	}
+
+	return workBuf.data;
 }
 
 char *
@@ -2910,9 +2968,9 @@ PQoidStatus(const PGresult *res)
 		return "";
 
 	len = strspn(res->cmdStatus + 7, "0123456789");
-	if (len > 23)
-		len = 23;
-	strncpy(buf, res->cmdStatus + 7, len);
+	if (len > sizeof(buf) - 1)
+		len = sizeof(buf) - 1;
+	memcpy(buf, res->cmdStatus + 7, len);
 	buf[len] = '\0';
 
 	return buf;

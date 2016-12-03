@@ -3,7 +3,7 @@
  * fe-auth.c
  *	   The front-end (client) authorization routines
  *
- * Portions Copyright (c) 1996-2014, PostgreSQL Global Development Group
+ * Portions Copyright (c) 1996-2016, PostgreSQL Global Development Group
  * Portions Copyright (c) 1994, Regents of the University of California
  *
  * IDENTIFICATION
@@ -234,12 +234,14 @@ pg_SSPI_error(PGconn *conn, const char *mprefix, SECURITY_STATUS r)
 {
 	char		sysmsg[256];
 
-	if (FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, r, 0,
+	if (FormatMessage(FORMAT_MESSAGE_IGNORE_INSERTS |
+					  FORMAT_MESSAGE_FROM_SYSTEM,
+					  NULL, r, 0,
 					  sysmsg, sizeof(sysmsg), NULL) == 0)
-		printfPQExpBuffer(&conn->errorMessage, "%s: SSPI error %x",
+		printfPQExpBuffer(&conn->errorMessage, "%s: SSPI error %x\n",
 						  mprefix, (unsigned int) r);
 	else
-		printfPQExpBuffer(&conn->errorMessage, "%s: %s (%x)",
+		printfPQExpBuffer(&conn->errorMessage, "%s: %s (%x)\n",
 						  mprefix, sysmsg, (unsigned int) r);
 }
 
@@ -300,7 +302,7 @@ pg_SSPI_continue(PGconn *conn)
 
 	if (conn->sspictx == NULL)
 	{
-		/* On first run, transfer retreived context handle */
+		/* On first run, transfer retrieved context handle */
 		conn->sspictx = malloc(sizeof(CtxtHandle));
 		if (conn->sspictx == NULL)
 		{
@@ -373,7 +375,7 @@ pg_SSPI_startup(PGconn *conn, int use_negotiate)
 	conn->sspictx = NULL;
 
 	/*
-	 * Retreive credentials handle
+	 * Retrieve credentials handle
 	 */
 	conn->sspicred = malloc(sizeof(CredHandle));
 	if (conn->sspicred == NULL)
