@@ -6,7 +6,7 @@
 
 This repository allows you to easily create a `libpq.framework` to use in your iOS applications.
 
-##Getting Started
+## Getting Started
 
 `libpq.framework` has no external dependencies apart from `libssl.a` and `libcrypto.a` from OpenSSL, which we download and compile by using the `build-libssl.sh` script so that you can be sure you are downloading it from the official OpenSSL repository. So getting started is easy:
 
