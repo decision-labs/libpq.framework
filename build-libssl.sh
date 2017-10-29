@@ -25,15 +25,15 @@ set -u
 # SCRIPT DEFAULTS
 
 # Default version in case no version is specified
-DEFAULTVERSION="1.0.2j"
+DEFAULTVERSION="1.0.2l"
 
 # Default (=full) set of architectures (OpenSSL <= 1.0.2) or targets (OpenSSL >= 1.1.0) to build
-DEFAULTARCHS="x86_64 i386 arm64 armv7s armv7 tv_x86_64 tv_arm64"
-DEFAULTTARGETS="ios-sim-cross-x86_64 ios-sim-cross-i386 ios64-cross-arm64 ios-cross-armv7s ios-cross-armv7 tvos-sim-cross-x86_64 tvos64-cross-arm64"
+DEFAULTARCHS="x86_64 arm64 tv_x86_64 tv_arm64"
+DEFAULTTARGETS="ios-sim-cross-x86_64 ios64-cross-arm64 tvos-sim-cross-x86_64 tvos64-cross-arm64"
 
 # Minimum iOS/tvOS SDK version to build for
-IOS_MIN_SDK_VERSION="7.0"
-TVOS_MIN_SDK_VERSION="9.0"
+IOS_MIN_SDK_VERSION="11.0"
+TVOS_MIN_SDK_VERSION="11.0"
 
 # Init optional env variables (use available variable or default to empty string)
 CURL_OPTIONS="${CURL_OPTIONS:-}"
@@ -50,6 +50,7 @@ echo_help()
   echo "     --ios-sdk=SDKVERSION          Override iOS SDK version"
   echo "     --noparallel                  Disable running make with parallel jobs (make -j)"
   echo "     --tvos-sdk=SDKVERSION         Override tvOS SDK version"
+  echo "     --disable-bitcode             Disable embedding Bitcode"
   echo " -v, --verbose                     Enable verbose logging"
   echo "     --verbose-on-error            Dump last 500 lines from log file if an error occurs (for Travis builds)"
   echo "     --version=VERSION             OpenSSL version to build (defaults to ${DEFAULTVERSION})"
@@ -57,13 +58,11 @@ echo_help()
   echo "Options for OpenSSL 1.0.2 and lower ONLY"
   echo "     --archs=\"ARCH ARCH ...\"       Space-separated list of architectures to build"
   echo "                                     Options: ${DEFAULTARCHS}"
-  echo "                                     Note: The framework will contain include files from the architecture listed first"
   echo
   echo "Options for OpenSSL 1.1.0 and higher ONLY"
   echo "     --deprecated                  Exclude no-deprecated configure option and build with deprecated methods"
   echo "     --targets=\"TARGET TARGET ...\" Space-separated list of build targets"
   echo "                                     Options: ${DEFAULTTARGETS}"
-  echo "                                     Note: The library will use include files from the target listed first"
   echo
   echo "For custom configure options, set variable CONFIG_OPTIONS"
   echo "For custom cURL options, set variable CURL_OPTIONS"
@@ -102,7 +101,7 @@ prepare_target_source_dirs()
   SOURCEDIR="${CURRENTPATH}/src/${PLATFORM}-${ARCH}"
   mkdir -p "${SOURCEDIR}"
   tar zxf "${CURRENTPATH}/${OPENSSL_ARCHIVE_FILE_NAME}" -C "${SOURCEDIR}"
-  cd "${SOURCEDIR}/openssl-${OPENSSL_ARCHIVE_BASE_NAME}"
+  cd "${SOURCEDIR}/${OPENSSL_ARCHIVE_BASE_NAME}"
   chmod u+x ./Configure
 }
 
@@ -168,10 +167,17 @@ finish_build_loop()
   if [[ "${PLATFORM}" == AppleTV* ]]; then
     LIBSSL_TVOS+=("${TARGETDIR}/lib/libssl.a")
     LIBCRYPTO_TVOS+=("${TARGETDIR}/lib/libcrypto.a")
+    OPENSSLCONF_SUFFIX="tvos_${ARCH}"
   else
     LIBSSL_IOS+=("${TARGETDIR}/lib/libssl.a")
     LIBCRYPTO_IOS+=("${TARGETDIR}/lib/libcrypto.a")
+    OPENSSLCONF_SUFFIX="ios_${ARCH}"
   fi
+
+  # Copy opensslconf.h to bin directory and add to array
+  OPENSSLCONF="opensslconf_${OPENSSLCONF_SUFFIX}.h"
+  cp "${TARGETDIR}/include/openssl/opensslconf.h" "${CURRENTPATH}/bin/${OPENSSLCONF}"
+  OPENSSLCONF_ALL+=("${OPENSSLCONF}")
 
   # Keep reference to first build target for include file
   if [ -z "${INCLUDE_DIR}" ]; then
@@ -184,6 +190,7 @@ ARCHS=""
 BRANCH=""
 CLEANUP=""
 CONFIG_ENABLE_EC_NISTP_64_GCC_128=""
+CONFIG_DISABLE_BITCODE=""
 CONFIG_NO_DEPRECATED=""
 IOS_SDKVERSION=""
 LOG_VERBOSE=""
@@ -212,6 +219,9 @@ case $i in
     ;;
   --ec-nistp-64-gcc-128)
     CONFIG_ENABLE_EC_NISTP_64_GCC_128="true"
+    ;;
+  --disable-bitcode)
+    CONFIG_DISABLE_BITCODE="true"
     ;;
   -h|--help)
     echo_help
@@ -262,31 +272,19 @@ elif [[ -n "${VERSION}" && ! "${VERSION}" =~ ^[0-9]+\.[0-9]+\.[0-9]+[a-z]*$ ]]; 
 elif [ -n "${BRANCH}" ]; then
   # Verify version number format. Expected: dot notation
   if [[ ! "${BRANCH}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-    echo "Unknown branch version number format. Examples: 1.0.2, 1.0.1"
+    echo "Unknown branch version number format. Examples: 1.0.2, 1.1.0"
     exit 1
 
   # Valid version number, determine latest version
   else
-    echo "Checking latest version of ${BRANCH} branch on GitHub..."
-    # Request all git tags for the openssl repostory, get all tags that match the current branch version (with an optional alphabetic suffix), remove everything except the version number, sort the list and get the last item
-    GITHUB_VERSION=$(curl -Ls https://api.github.com/repos/openssl/openssl/git/refs/tags | grep -Eo "\"ref\": \"refs/tags/OpenSSL_${BRANCH//./_}[a-z]*\"" | sed -E 's|^.*"refs/tags/OpenSSL_([^"]+)".*$|\1|g' | sort | tail -1)
+    echo "Checking latest version of ${BRANCH} branch on openssl.org..."
+    # Get directory content listing of /source/ (only contains latest version per branch), limit list to archives (so one archive per branch),
+    # filter for the requested branch, sort the list and get the last item (last two steps to ensure there is always 1 result)
+    VERSION=$(curl ${CURL_OPTIONS} -s https://ftp.openssl.org/source/ | grep -Eo '>openssl-[0-9]\.[0-9]\.[0-9][a-z]*\.tar\.gz<' | grep -Eo "${BRANCH//./\.}[a-z]*" | sort | tail -1)
 
     # Verify result
-    if [ -z "${GITHUB_VERSION}" ]; then
-      echo "Could not determine latest version, please check https://github.com/openssl/openssl/releases and use --version option"
-      exit 1
-    fi
-
-    VERSION="${GITHUB_VERSION//_/.}"
-
-    # Check whether download exists
-    # -I = HEAD, -L follow Location header, -f fail silently for 4xx errors and return status 22, -s silent
-    curl ${CURL_OPTIONS} -ILfs "https://github.com/openssl/openssl/archive/OpenSSL_${GITHUB_VERSION}.tar.gz" > /dev/null
-
-    # Check for success status
-    if [ $? -ne 0 ]; then
-      echo "Script determined latest version ${VERSION}, but the download archive does not seem to be available."
-      echo "Please check https://github.com/openssl/openssl/releases and use --version option"
+    if [ -z "${VERSION}" ]; then
+      echo "Could not determine latest version, please check https://www.openssl.org/source/ and use --version option"
       exit 1
     fi
   fi
@@ -295,9 +293,6 @@ elif [ -n "${BRANCH}" ]; then
 elif [ -z "${VERSION}" ]; then
   VERSION="${DEFAULTVERSION}"
 fi
-
-# Set GITHUB_VERSION (version with underscores instead of dots)
-GITHUB_VERSION="${VERSION//./_}"
 
 # Build type:
 # In short, type "archs" is used for OpenSSL versions in the 1.0 branch and type "targets" for later versions.
@@ -308,7 +303,7 @@ GITHUB_VERSION="${VERSION//./_}"
 # custom configuration file as build targets. Therefore the key variable and type are called targets for 1.1 (and later).
 
 # OpenSSL branches <= 1.0
-if [[ "${GITHUB_VERSION}" =~ ^(0_9|1_0) ]]; then
+if [[ "${VERSION}" =~ ^(0\.9|1\.0) ]]; then
   BUILD_TYPE="archs"
 
   # Set default for ARCHS if not specified
@@ -387,6 +382,9 @@ else
 fi
 echo "  iOS SDK: ${IOS_SDKVERSION}"
 echo "  tvOS SDK: ${TVOS_SDKVERSION}"
+if [ "${CONFIG_DISABLE_BITCODE}" == "true" ]; then
+  echo "  Bitcode embedding disabled"
+fi
 echo "  Number of make threads: ${BUILD_THREADS}"
 if [ -n "${CONFIG_OPTIONS}" ]; then
   echo "  Configure options: ${CONFIG_OPTIONS}"
@@ -395,20 +393,35 @@ echo "  Build location: ${CURRENTPATH}"
 echo
 
 # Download OpenSSL when not present
-OPENSSL_ARCHIVE_BASE_NAME=OpenSSL_${GITHUB_VERSION}
-OPENSSL_ARCHIVE_FILE_NAME=${OPENSSL_ARCHIVE_BASE_NAME}.tar.gz
+OPENSSL_ARCHIVE_BASE_NAME="openssl-${VERSION}"
+OPENSSL_ARCHIVE_FILE_NAME="${OPENSSL_ARCHIVE_BASE_NAME}.tar.gz"
 if [ ! -e ${OPENSSL_ARCHIVE_FILE_NAME} ]; then
   echo "Downloading ${OPENSSL_ARCHIVE_FILE_NAME}..."
-  OPENSSL_ARCHIVE_URL="https://github.com/openssl/openssl/archive/${OPENSSL_ARCHIVE_FILE_NAME}"
-  # -L follow Location header, -f fail silently for 4xx errors and return status 22, -O Use server-specified filename for download
-  curl ${CURL_OPTIONS} -LfO "${OPENSSL_ARCHIVE_URL}"
+  OPENSSL_ARCHIVE_URL="https://www.openssl.org/source/${OPENSSL_ARCHIVE_FILE_NAME}"
 
-  # Check for success status
+  # Check whether file exists here (this is the location of the latest version for each branch)
+  # -s be silent, -f return non-zero exit status on failure, -I get header (do not download)
+  curl ${CURL_OPTIONS} -sfI "${OPENSSL_ARCHIVE_URL}" > /dev/null
+
+  # If unsuccessful, try the archive
   if [ $? -ne 0 ]; then
-    echo "An error occured when trying to download OpenSSL ${VERSION} from ${OPENSSL_ARCHIVE_URL}."
-    echo "Please check cURL's error message and/or your network connection."
+    BRANCH=$(echo "${VERSION}" | grep -Eo '^[0-9]\.[0-9]\.[0-9]')
+    OPENSSL_ARCHIVE_URL="https://www.openssl.org/source/old/${BRANCH}/${OPENSSL_ARCHIVE_FILE_NAME}"
+
+    curl ${CURL_OPTIONS} -sfI "${OPENSSL_ARCHIVE_URL}" > /dev/null
+  fi
+
+  # Both attempts failed, so report the error
+  if [ $? -ne 0 ]; then
+    echo "An error occurred trying to find OpenSSL ${VERSION} on ${OPENSSL_ARCHIVE_URL}"
+    echo "Please verify that the version you are trying to build exists, check cURL's error message and/or your network connection."
     exit 1
   fi
+
+  # Archive was found, so proceed with download.
+  # -O Use server-specified filename for download
+  curl ${CURL_OPTIONS} -O "${OPENSSL_ARCHIVE_URL}"
+
 else
   echo "Using ${OPENSSL_ARCHIVE_FILE_NAME}"
 fi
@@ -444,6 +457,7 @@ mkdir -p "${CURRENTPATH}/src"
 
 # Init vars for library references
 INCLUDE_DIR=""
+OPENSSLCONF_ALL=()
 LIBSSL_IOS=()
 LIBCRYPTO_IOS=()
 LIBSSL_TVOS=()
@@ -457,20 +471,83 @@ else
 fi
 
 # Build iOS library if selected for build
-if [ ${#LIBSSL_IOS} -gt 0 ]; then
+if [ ${#LIBSSL_IOS[@]} -gt 0 ]; then
   echo "Build library for iOS..."
   lipo -create ${LIBSSL_IOS[@]} -output "${CURRENTPATH}/lib/libssl.a"
   lipo -create ${LIBCRYPTO_IOS[@]} -output "${CURRENTPATH}/lib/libcrypto.a"
 fi
 
 # Build tvOS library if selected for build
-if [ ${#LIBSSL_TVOS} -gt 0 ] ; then
-    echo "Build library for tvOS..."
-    lipo -create ${LIBSSL_TVOS[@]} -output "${CURRENTPATH}/lib/libssl-tvOS.a"
-    lipo -create ${LIBCRYPTO_TVOS[@]} -output "${CURRENTPATH}/lib/libcrypto-tvOS.a"
+if [ ${#LIBSSL_TVOS[@]} -gt 0 ]; then
+  echo "Build library for tvOS..."
+  lipo -create ${LIBSSL_TVOS[@]} -output "${CURRENTPATH}/lib/libssl-tvOS.a"
+  lipo -create ${LIBCRYPTO_TVOS[@]} -output "${CURRENTPATH}/lib/libcrypto-tvOS.a"
 fi
 
 # Copy include directory
-cp -R "${INCLUDE_DIR}" ${CURRENTPATH}/include/
+cp -R "${INCLUDE_DIR}" "${CURRENTPATH}/include/"
+
+# Only create intermediate file when building for multiple targets
+# For a single target, opensslconf.h is still present in $INCLUDE_DIR (and has just been copied to the target include dir)
+if [ ${#OPENSSLCONF_ALL[@]} -gt 1 ]; then
+
+  # Prepare intermediate header file
+  # This overwrites opensslconf.h that was copied from $INCLUDE_DIR
+  OPENSSLCONF_INTERMEDIATE="${CURRENTPATH}/include/openssl/opensslconf.h"
+  cp "${CURRENTPATH}/include/opensslconf-template.h" "${OPENSSLCONF_INTERMEDIATE}"
+
+  # Loop all header files
+  LOOPCOUNT=0
+  for OPENSSLCONF_CURRENT in "${OPENSSLCONF_ALL[@]}" ; do
+
+    # Copy specific opensslconf file to include dir
+    cp "${CURRENTPATH}/bin/${OPENSSLCONF_CURRENT}" "${CURRENTPATH}/include/openssl"
+
+    # Determine define condition
+    case "${OPENSSLCONF_CURRENT}" in
+      *_ios_x86_64.h)
+        DEFINE_CONDITION="TARGET_OS_IOS && TARGET_OS_SIMULATOR && TARGET_CPU_X86_64"
+      ;;
+      *_ios_i386.h)
+        DEFINE_CONDITION="TARGET_OS_IOS && TARGET_OS_SIMULATOR && TARGET_CPU_X86"
+      ;;
+      *_ios_arm64.h)
+        DEFINE_CONDITION="TARGET_OS_IOS && TARGET_OS_EMBEDDED && TARGET_CPU_ARM64"
+      ;;
+      *_ios_armv7s.h)
+        DEFINE_CONDITION="TARGET_OS_IOS && TARGET_OS_EMBEDDED && TARGET_CPU_ARM && defined(__ARM_ARCH_7S__)"
+      ;;
+      *_ios_armv7.h)
+        DEFINE_CONDITION="TARGET_OS_IOS && TARGET_OS_EMBEDDED && TARGET_CPU_ARM && !defined(__ARM_ARCH_7S__)"
+      ;;
+      *_tvos_x86_64.h)
+        DEFINE_CONDITION="TARGET_OS_TV && TARGET_OS_SIMULATOR && TARGET_CPU_X86_64"
+      ;;
+      *_tvos_arm64.h)
+        DEFINE_CONDITION="TARGET_OS_TV && TARGET_OS_EMBEDDED && TARGET_CPU_ARM64"
+      ;;
+      *)
+        # Don't run into unexpected cases by setting the default condition to false
+        DEFINE_CONDITION="0"
+      ;;
+    esac
+
+    # Determine loopcount; start with if and continue with elif
+    LOOPCOUNT=$((LOOPCOUNT + 1))
+    if [ ${LOOPCOUNT} -eq 1 ]; then
+      echo "#if ${DEFINE_CONDITION}" >> "${OPENSSLCONF_INTERMEDIATE}"
+    else
+      echo "#elif ${DEFINE_CONDITION}" >> "${OPENSSLCONF_INTERMEDIATE}"
+    fi
+
+    # Add include
+    echo "# include <openssl/${OPENSSLCONF_CURRENT}>" >> "${OPENSSLCONF_INTERMEDIATE}"
+  done
+
+  # Finish
+  echo "#else" >> "${OPENSSLCONF_INTERMEDIATE}"
+  echo '# error Unable to determine target or target not included in OpenSSL build' >> "${OPENSSLCONF_INTERMEDIATE}"
+  echo "#endif" >> "${OPENSSLCONF_INTERMEDIATE}"
+fi
 
 echo "Done."
