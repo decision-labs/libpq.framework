@@ -1,5 +1,6 @@
-#libpq.framework for iOS 8.x
-**An XCode project to compile your own libpq.framework for iOS 8.x**
+# libpq.framework for iOS 11
+
+**An XCode project to compile your own libpq.framework for iOS 11.x**
 
 [libpq](http://www.postgresql.org/docs/current/interactive/libpq.html) is a set of library functions that allow client programs to pass queries to the [PostgreSQL](http://www.postgresql.org/) backend database server and to receive the results of these sql queries.
 
@@ -9,7 +10,7 @@ This repository allows you to easily create a `libpq.framework` to use in your i
 
 `libpq.framework` has no external dependencies apart from `libssl.a` and `libcrypto.a` from OpenSSL, which we download and compile by using the `build-libssl.sh` script so that you can be sure you are downloading it from the official OpenSSL repository. So getting started is easy:
 
-* Install [Git](http://git-scm.com/) and the latest Xcode with the iOS 8.x SDK.
+* Install [Git](http://git-scm.com/) and the latest Xcode with the iOS 11.x SDK.
 
 * Make sure that `xcode-select` points to the correct location by running:
 
@@ -25,11 +26,11 @@ This repository allows you to easily create a `libpq.framework` to use in your i
 
 * Open `libpq.xcodeproj` with XCode and *build* the framework.
 
-##Download precompiled Framework
+## Download precompiled Framework
 
-You can also download a precompiled `libpq.framework` from: [libpq.framework.zip](http://bit.ly/libpq-framework)
+You can also download a precompiled `libpq.framework` from: [libpq.framework.zip](http://bit.ly/libpq-zip)
 
-##Usage
+## Usage
 
 Drop the framework into your project's Navigator and don't forget to copy it to your project, and you should be ready to go. See libpq's [example programs](http://www.postgresql.org/docs/current/interactive/libpq-example.html) for sample code. In general for Objective-C one would need to do something like:
 
@@ -53,7 +54,7 @@ PQclear(res);
 PQfinish(_pgconn);
 ```
 
-##Licenses
+## Licenses
 
 PostgreSQL is released under the [PostgreSQL](http://www.opensource.org/licenses/postgresql) License, a liberal Open Source license, similar to the BSD or MIT licenses. See the [COPYRIGHT.PostgreSQL](https://github.com/spacialdb/libpq.framework/blob/master/COPYRIGHT.PostgreSQL) file.
 
