@@ -20,7 +20,7 @@
 
 - (void)setUp {
     [super setUp];
-    conninfo = [NSString stringWithFormat:@"user='%@' dbname='%@'", @"kashif", @"postgres"];
+    conninfo = [NSString stringWithFormat:@"user='%@' dbname='%@' password='password'", @"kashif", @"postgres"];
     conn = PQconnectdb([conninfo UTF8String]);
 }
 
