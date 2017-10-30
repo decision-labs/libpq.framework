@@ -521,8 +521,7 @@
 			children = (
 				4BC709951FA622AD006B591F /* utils */,
 			);
-			name = backend;
-			path = "New Group";
+			path = backend;
 			sourceTree = "<group>";
 		};
 		4BC709951FA622AD006B591F /* utils */ = {
