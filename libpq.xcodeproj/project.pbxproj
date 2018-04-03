@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 48;
+	objectVersion = 50;
 	objects = {
 
 /* Begin PBXAggregateTarget section */
@@ -32,7 +32,6 @@
 		4BB6232417EF963300920783 /* fe_memutils.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BB6232317EF963300920783 /* fe_memutils.c */; };
 		4BB6232817EF965300920783 /* fe_memutils.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BB6232617EF965300920783 /* fe_memutils.h */; };
 		4BB6232C17EF96BF00920783 /* palloc.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BB6232B17EF96BF00920783 /* palloc.h */; };
-		4BBB04D116A91EAE00CEE2AE /* pqsignal.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BBB04C916A91EAE00CEE2AE /* pqsignal.h */; };
 		4BBB04F116A91EE500CEE2AE /* fe-auth.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BBB04D516A91EE500CEE2AE /* fe-auth.c */; };
 		4BBB04F216A91EE500CEE2AE /* fe-auth.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BBB04D616A91EE500CEE2AE /* fe-auth.h */; };
 		4BBB04F316A91EE500CEE2AE /* fe-connect.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BBB04D716A91EE500CEE2AE /* fe-connect.c */; };
@@ -195,7 +194,6 @@
 		4BB6232317EF963300920783 /* fe_memutils.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fe_memutils.c; sourceTree = "<group>"; };
 		4BB6232617EF965300920783 /* fe_memutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fe_memutils.h; sourceTree = "<group>"; };
 		4BB6232B17EF96BF00920783 /* palloc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = palloc.h; sourceTree = "<group>"; };
-		4BBB04C916A91EAE00CEE2AE /* pqsignal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pqsignal.h; sourceTree = "<group>"; };
 		4BBB04D516A91EE500CEE2AE /* fe-auth.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "fe-auth.c"; sourceTree = "<group>"; };
 		4BBB04D616A91EE500CEE2AE /* fe-auth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "fe-auth.h"; sourceTree = "<group>"; };
 		4BBB04D716A91EE500CEE2AE /* fe-connect.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "fe-connect.c"; sourceTree = "<group>"; };
@@ -590,7 +588,6 @@
 			isa = PBXGroup;
 			children = (
 				4BC709C51FA64033006B591F /* scram.h */,
-				4BBB04C916A91EAE00CEE2AE /* pqsignal.h */,
 				4BA7590E17F043F100C26AD6 /* pqcomm.h */,
 				4BE930C915057FE60021F063 /* libpq-fs.h */,
 			);
@@ -763,7 +760,6 @@
 				4BC3EA0215058F8D00D47056 /* x509.h in Headers */,
 				4BC3EA0315058F8D00D47056 /* x509_vfy.h in Headers */,
 				4BC3EA0415058F8D00D47056 /* x509v3.h in Headers */,
-				4BBB04D116A91EAE00CEE2AE /* pqsignal.h in Headers */,
 				4BC709BC1FA63F38006B591F /* base64.h in Headers */,
 				4BBB04F216A91EE500CEE2AE /* fe-auth.h in Headers */,
 				4BBB050016A91EE500CEE2AE /* libpq-int.h in Headers */,
@@ -827,7 +823,7 @@
 				};
 			};
 			buildConfigurationList = 4B4C4CAB15040B7500840750 /* Build configuration list for PBXProject "libpq" */;
-			compatibilityVersion = "Xcode 8.0";
+			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -1134,8 +1130,12 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				INFOPLIST_FILE = libpqTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.spacialdb.libpqTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1161,8 +1161,12 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				INFOPLIST_FILE = libpqTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.spacialdb.libpqTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
